@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="5dp" >
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Honeydew" >
+
+        <TextView
+            android:id="@+id/lblEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txtEvent"
+            android:layout_alignParentLeft="true"
+            android:text="@string/event"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/Gray" />
+
+        <TextView
+            android:id="@+id/lblTwoPointSep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/txtEvent"
+            android:layout_toRightOf="@id/lblEvent"
+            android:text="@string/twoPointSep"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/Gray" />
+
+        <TextView
+            android:id="@id/txtEvent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/lblTwoPointSep"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/Black" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Honeydew"
+        android:paddingTop="3dp" >
+
+        <TextView
+            android:id="@+id/lblEventDescr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="@string/description"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/Gray" />
+
+        <TextView
+            android:id="@+id/lblTwoPointSep2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/lblEventDescr"
+            android:text="@string/twoPointSep"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/Gray" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtEventDescr"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/Honeydew"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/Black" />
+    
+</LinearLayout>

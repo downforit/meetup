@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MyEvents</string>
+
+    <string name="twoPointSep">": "</string>
+
+    <string name="mainVPTabFutureEvents">Will happens</string>
+    <string name="mainVPTabPastEvents">Passed</string>
+    
+    <string name="menu_settings">Settings</string>
+    <string name="user">Utente</string>
+    <string name="event">Evento</string>
+    <string name="description">Descrizione</string>
+    
+    <string name="username">Username</string>
+    <string name="password">password</string>
+    <string name="password2">Repeat password</string>
+
+    <string name="LoginButton">Login</string>
+    <string name="loginFailedMessage">Username or Password not correct, please try again</string>
+    <string name="loginNewUserMsg"><u>Create new account</u></string>
+    <string name="loginConfirmedMsg">Login completed correctly</string>
+    <string name="LoginMessage">To perform the login fill the following fields</string>
+    
+    <string name="lgnNewConfirmedMsg">New account created correctly</string>
+    <string name="lgnNewPasswordsDiffers">ATTENTION: passwords must be equals</string>
+    <string name="lgnNewBtnCreateUser">Create new account</string>
+    <string name="lngNewLblCreateNewAccount">To create a new account fill following fields</string>
+    <string name="lgnNewFailedMessage">ATTENTION: unable to create account</string>
+    <string name="lgnNewUsernameExistMsg">ATTENTION: username already exist, try to change it</string>
+    <string name="newEvent">New event</string>
+    <string name="logout">Log out</string>
+    <string name="about">About</string>
+
+    <string name="networkFailedMessage">Problems during network comunication</string>
+    <string name="unexpectedErrorMessage">Unexpected error occurred</string>
+    
+</resources>
