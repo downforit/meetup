@@ -1,11 +1,10 @@
 package it.marberpp.myevents.events;
 
 import it.marberpp.myevents.R;
-import it.marberpp.myevents.hibernate.pojo.Event;
-import it.marberpp.myevents.login.LoginAcrivity;
-import it.marberpp.myevents.login.LoginFragment;
 
 import java.util.List;
+
+import mymeeting.hibernate.pojo.Event;
 
 
 import android.content.Intent;

@@ -2,12 +2,13 @@ package it.marberpp.myevents.hibernate;
 
 
 
-import it.marberpp.myevents.hibernate.pojo.Event;
-import it.marberpp.myevents.hibernate.pojo.Group;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import mymeeting.hibernate.pojo.Event;
+import mymeeting.hibernate.pojo.Group;
 
 import android.content.Context;
 import android.database.Cursor;

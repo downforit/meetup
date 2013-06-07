@@ -13,12 +13,13 @@ package it.marberpp.myevents;
 
 
 import it.marberpp.myevents.events.EventsVPAdapter;
-import it.marberpp.myevents.hibernate.pojo.Event;
 import it.marberpp.myevents.login.LoginAcrivity;
 import it.marberpp.myevents.login.LoginFragment;
 //import it.marberpp.myevents.R;
 
 import java.util.List;
+
+import mymeeting.hibernate.pojo.Event;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;

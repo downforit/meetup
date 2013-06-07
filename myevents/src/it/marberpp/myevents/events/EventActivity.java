@@ -1,11 +1,8 @@
 package it.marberpp.myevents.events;
 
-import it.marberpp.myevents.login.LoginFragment;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class EventActivity extends SherlockFragmentActivity {

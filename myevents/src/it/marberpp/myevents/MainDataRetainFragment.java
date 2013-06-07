@@ -2,10 +2,11 @@ package it.marberpp.myevents;
 
 import it.marberpp.myevents.events.EventsListFragment;
 import it.marberpp.myevents.hibernate.DatabaseHelper;
-import it.marberpp.myevents.hibernate.pojo.Event;
 import it.marberpp.myevents.utils.ThreadUtilities;
 
 import java.util.List;
+
+import mymeeting.hibernate.pojo.Event;
 
 import android.content.Context;
 import android.content.SharedPreferences;

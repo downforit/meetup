@@ -1,8 +1,8 @@
 package it.marberpp.myevents.events;
 
+import mymeeting.hibernate.pojo.Event;
 import it.marberpp.myevents.R;
 import it.marberpp.myevents.hibernate.DatabaseHelper;
-import it.marberpp.myevents.hibernate.pojo.Event;
 import it.marberpp.myevents.utils.ThreadUtilities;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -15,9 +15,7 @@ import android.widget.TextView;
 
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+
 
 public class EventFragment extends SherlockFragment {
 	public static final String PARAM_EVENT_ID = "event_id";
