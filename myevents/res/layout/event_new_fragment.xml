@@ -1,92 +1,88 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
-	<TextView
-	    android:id="@+id/lblEventName"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignBaseline="@+id/txtEventName"
-	    android:layout_alignParentLeft="true"
-	    android:paddingRight="10dp"
-	    android:text="@string/event" />
-
-	<EditText
-		android:id="@id/txtEventName"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:layout_toRightOf="@id/lblEventName"
-		android:inputType="text"/>    
-
-	
-	
-	<TextView
-	    android:id="@+id/lblGroup"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignBaseline="@+id/txtGroup"
-	    android:layout_alignParentLeft="true"
-	    android:layout_below="@id/txtEventName"
-	    android:paddingRight="10dp"
-	    android:text="@string/group" />
-
-	<EditText
-		android:id="@id/txtGroup"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/txtEventName"
-		android:layout_toRightOf="@id/lblGroup"
-	    android:enabled="false"
-	    android:text="grp_marber"
-		android:inputType="text"/>
-
-	<TextView
-	    android:id="@+id/lblDate"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignBaseline="@+id/datePicker"
-	    android:layout_alignParentLeft="true"
-	    android:layout_below="@id/txtGroup"
-	    android:paddingRight="10dp"
-	    android:text="@string/date" />
-
-
-	<DatePicker
-	    android:id="@id/datePicker"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/txtGroup"
-	    android:layout_toRightOf="@id/lblDate" />
-		
-<!-- 	<EditText -->
-<!-- 	    android:id="@id/txtDate" -->
-<!-- 	    android:layout_width="fill_parent" -->
-<!-- 	    android:layout_height="wrap_content" -->
-<!-- 	    android:layout_below="@id/txtGroup" -->
-<!-- 	    android:layout_toRightOf="@id/lblDate" -->
-<!-- 	    android:ems="10" -->
-<!-- 	    android:inputType="datetime"/> -->
-
-	
-	<TextView
-	    android:id="@+id/lblDescription"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignBaseline="@+id/txtDescription"
-	    android:layout_alignParentLeft="true"
-	    android:layout_below="@id/datePicker"
-	    android:paddingRight="10dp"
-	    android:text="@string/description" />
-
-	<EditText
-	    android:id="@id/txtDescription"
+    <RelativeLayout
 	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:layout_below="@id/datePicker"
-	    android:layout_toRightOf="@id/lblDescription"
-	    android:ems="10"
-	    android:inputType="textMultiLine"/>
-
+	    android:layout_height="wrap_content" >
+	
+		<TextView
+		    android:id="@+id/lblEventName"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignBaseline="@+id/txtEventName"
+		    android:layout_alignParentLeft="true"
+		    android:paddingRight="10dp"
+		    android:text="@string/event" />
+	
+		<EditText
+			android:id="@id/txtEventName"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
+			android:layout_toRightOf="@id/lblEventName"
+			android:inputType="text"/>    
+	
+		
+		
+		<TextView
+		    android:id="@+id/lblGroup"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignBaseline="@+id/txtGroup"
+		    android:layout_alignParentLeft="true"
+		    android:layout_below="@id/txtEventName"
+		    android:paddingRight="10dp"
+		    android:text="@string/group" />
+	
+		<EditText
+			android:id="@id/txtGroup"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/txtEventName"
+			android:layout_toRightOf="@id/lblGroup"
+		    android:enabled="false"
+		    android:text="grp_marber"
+			android:inputType="text"/>
+	
+		<TextView
+		    android:id="@+id/lblDate"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignBaseline="@+id/datePicker"
+		    android:layout_alignParentLeft="true"
+		    android:layout_below="@id/txtGroup"
+		    android:paddingRight="10dp"
+		    android:text="@string/date" />
+	
+	
+		<DatePicker
+		    android:id="@id/datePicker"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/txtGroup"
+		    android:layout_toRightOf="@id/lblDate" />
 			
-</RelativeLayout>
+		<TextView
+		    android:id="@+id/lblDescription"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_alignBaseline="@+id/txtDescription"
+		    android:layout_alignParentLeft="true"
+		    android:layout_below="@id/datePicker"
+		    android:paddingRight="10dp"
+		    android:text="@string/description" />
+	
+		<EditText
+		    android:id="@id/txtDescription"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/datePicker"
+		    android:layout_toRightOf="@id/lblDescription"
+		    android:ems="10"
+		    android:inputType="textMultiLine"/>
+	
+				
+	</RelativeLayout>
+</ScrollView>
