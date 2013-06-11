@@ -1,4 +1,4 @@
-package it.marberpp.myevents.events;
+package it.marberpp.myevents.groups;
 
 import it.marberpp.myevents.MainLib;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
-public class EventActivity extends SherlockFragmentActivity {
+public class GroupActivity extends SherlockFragmentActivity {
 	
 	
 	//*********************************************
@@ -16,8 +16,8 @@ public class EventActivity extends SherlockFragmentActivity {
 
 		
 		if (getSupportFragmentManager().findFragmentById(android.R.id.content)==null) {
-			String eventId = getIntent().getStringExtra(MainLib.PARAM_EVENT_ID);
-	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, EventFragment.newInstance(eventId)).commit();
+			String groupId = getIntent().getStringExtra(MainLib.PARAM_GROUP_ID);
+	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, GroupFragment.newInstance(groupId)).commit();
 	    }
 	
 		getSupportActionBar().setHomeButtonEnabled(true);// serve solo se si imposta un SKD maggiore di 11	

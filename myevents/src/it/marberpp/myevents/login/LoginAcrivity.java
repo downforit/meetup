@@ -1,5 +1,6 @@
 package it.marberpp.myevents.login;
 
+import it.marberpp.myevents.MainLib;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +20,8 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 
 		
 		if (getSupportFragmentManager().findFragmentById(android.R.id.content)==null) {
-			String username = getIntent().getStringExtra(LoginFragment.PARAM_USERNAME);
-			String password = getIntent().getStringExtra(LoginFragment.PARAM_PASSWORD);
+			String username = getIntent().getStringExtra(MainLib.PARAM_USERNAME);
+			String password = getIntent().getStringExtra(MainLib.PARAM_PASSWORD);
 	        getSupportFragmentManager().beginTransaction().add(android.R.id.content, LoginFragment.newInstance(username, password)).commit();
 	    }
 	
@@ -58,8 +59,8 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 	@Override
 	public void loginCompleted(String username, String password) {
 		Intent i = getIntent();
-		i.putExtra(LoginFragment.PARAM_USERNAME, username);
-		i.putExtra(LoginFragment.PARAM_PASSWORD, password);
+		i.putExtra(MainLib.PARAM_USERNAME, username);
+		i.putExtra(MainLib.PARAM_PASSWORD, password);
 		this.setResult(SherlockFragmentActivity.RESULT_OK, i);
 		finish();
 	}	

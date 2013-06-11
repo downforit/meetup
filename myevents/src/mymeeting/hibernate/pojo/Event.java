@@ -15,7 +15,9 @@ public class Event  implements java.io.Serializable {
 
      @Expose
      private String evnId;
+     @Expose
      private Group group;
+     @Expose
      private Account account;
      @Expose
      private String evnDescription;

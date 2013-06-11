@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package it.marberpp.myevents.services.pojo;
+package mymeeting.services.responses;
 
 import com.google.gson.annotations.Expose;
 
@@ -12,7 +12,7 @@ import com.google.gson.annotations.Expose;
  */
 public class GenericResponse {
   @Expose
-  private boolean serviceSuccessed;
+  private boolean serviceSuccessed = true;
   @Expose
   private int errorCode = 0;
   @Expose

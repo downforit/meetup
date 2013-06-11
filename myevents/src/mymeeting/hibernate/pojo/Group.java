@@ -2,6 +2,7 @@ package mymeeting.hibernate.pojo;
 // Generated 7-giu-2013 0.23.19 by Hibernate Tools 3.2.1.GA
 
 
+import com.google.gson.annotations.Expose;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,14 +13,23 @@ import java.util.Set;
 public class Group  implements java.io.Serializable {
 
 
+     @Expose
      private String grpId;
+     @Expose
      private Account account;
+     @Expose
      private String grpDescription;
+     @Expose
      private String grpImageUrl;
+     @Expose
      private Date grpCreationDate;
+     @Expose
      private Boolean flgNeedSync;
+     @Expose
      private Date lastUpdate;
+     @Expose
      private Boolean flgShowed;
+     @Expose
      private Boolean flgDeleted;
      private Set events = new HashSet(0);
      private Set RAcnGrps = new HashSet(0);

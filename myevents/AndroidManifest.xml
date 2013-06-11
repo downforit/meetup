@@ -27,6 +27,9 @@
         
         <activity android:name=".login.LoginAcrivity"></activity>
         <activity android:name=".events.EventActivity"></activity>
+        <activity android:name=".events.EventNewActivity"></activity>
+        <activity android:name=".groups.GroupActivity"></activity>
+        <activity android:name=".groups.GroupNewActivity"></activity>
         </application>
 
 </manifest>

@@ -1,13 +1,11 @@
-package it.marberpp.myevents.events;
+package it.marberpp.myevents.groups;
 
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
 
 import java.util.List;
 
-import mymeeting.hibernate.pojo.Event;
-
-
+import mymeeting.hibernate.pojo.Group;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -20,22 +18,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-public class EventsListFragment extends ListFragment {
+public class GroupsListFragment extends ListFragment {
 
 	boolean fragmentAttached = false;
 	
-	List<Event> events;
+	List<Group> groups;
 	int pageId = -1;
 
 	View vProgressBar = null;
-	ListView eventsListView = null;
+	ListView groupsListView = null;
 
 	
 	//***************************************************
-	public static EventsListFragment newInstance(int pageId) {
-		Log.d(EventsListFragment.class.getSimpleName(), "NEW INSTANCE pageId = " + pageId);
+	public static GroupsListFragment newInstance(int pageId) {
+		Log.d(GroupsListFragment.class.getSimpleName(), "NEW INSTANCE pageId = " + pageId);
 
-		EventsListFragment f = new EventsListFragment();
+		GroupsListFragment f = new GroupsListFragment();
 		Bundle args = new Bundle();
 		args.putInt(MainLib.PAGE_ID, pageId);
 		f.setArguments(args);
@@ -64,20 +62,19 @@ public class EventsListFragment extends ListFragment {
 		this.pageId = getArguments().getInt(MainLib.PAGE_ID);
 		Log.d(getClass().getSimpleName(), "ON CREATE VIEW avviato pageId = " + this.pageId);
 
-		View result = inflater.inflate(R.layout.events_list_fragment, parent,
+		View result = inflater.inflate(R.layout.groups_list_fragment, parent,
 				false);
 
 
 		this.vProgressBar = result.findViewById(R.id.progressBarELF);
-		this.eventsListView = (ListView) result.findViewById(android.R.id.list);
+		this.groupsListView = (ListView) result.findViewById(android.R.id.list);
 
-		if (this.events != null) {// questo controllo e' necessario perchè
+		if (this.groups != null) {// questo controllo e' necessario perchè
 									// onCreateView viene eseguito anche se si
 									// setta in retain a true
 			this.showContents();
 		}
 
-		//Log.d("EventsListFragment", "ON CREATE VIEW completato");
 		return result;
 	}
 	
@@ -94,10 +91,10 @@ public class EventsListFragment extends ListFragment {
 	//***************************************************
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		Event currentEvent = this.events.get(position);
+		Group currentGroup = this.groups.get(position);
 		
-		Intent intentTmp=new Intent(getActivity(), EventActivity.class);
-		intentTmp.putExtra(MainLib.PARAM_EVENT_ID, currentEvent.getEvnId());
+		Intent intentTmp=new Intent(getActivity(), GroupActivity.class);
+		intentTmp.putExtra(MainLib.PARAM_GROUP_ID, currentGroup.getGrpId());
 		startActivityForResult(intentTmp, 0);
 		    
 	}
@@ -106,9 +103,9 @@ public class EventsListFragment extends ListFragment {
 	//###################################################
 
 	//***************************************************
-	public void setEvents(List<Event> events) {
-		Log.d(getClass().getSimpleName(), "SET EVENT avviato pageId = " + this.pageId);
-		this.events = events;
+	public void setGroups(List<Group> groups) {
+		Log.d(getClass().getSimpleName(), "SET groups avviato pageId = " + this.pageId);
+		this.groups = groups;
 
 		this.showContents();
 	}
@@ -120,14 +117,14 @@ public class EventsListFragment extends ListFragment {
 			return;
 		}
 
-		if(this.events != null){
+		if(this.groups != null){
 			this.vProgressBar.setVisibility(View.GONE);
-			this.eventsListView.setVisibility(View.VISIBLE);
-			this.eventsListView.setAdapter(new EventRowAdapter());
+			this.groupsListView.setVisibility(View.VISIBLE);
+			this.groupsListView.setAdapter(new GroupRowAdapter());
 		} else {
 			this.vProgressBar.setVisibility(View.VISIBLE);
-			this.eventsListView.setVisibility(View.GONE);
-			this.eventsListView.setAdapter(null);
+			this.groupsListView.setVisibility(View.GONE);
+			this.groupsListView.setAdapter(null);
 		}
 		
 		
@@ -138,27 +135,23 @@ public class EventsListFragment extends ListFragment {
 	
 	//###################################################
 	//###################################################
-	class EventRowAdapter extends ArrayAdapter<Event> {
-		EventRowAdapter() {
-			super(EventsListFragment.this.getActivity(), R.layout.events_list_row,R.id.txtEvent, EventsListFragment.this.events);
+	class GroupRowAdapter extends ArrayAdapter<Group> {
+		GroupRowAdapter() {
+			super(GroupsListFragment.this.getActivity(), R.layout.groups_list_row,R.id.txtGroup, GroupsListFragment.this.groups);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = super.getView(position, convertView, parent);
 
-			Event currentEvent = events.get(position);
+			Group currentGroup = GroupsListFragment.this.groups.get(position);
 			
-			TextView txtEvent = (TextView) row.findViewById(R.id.txtEvent);
-			txtEvent.setText(currentEvent.getEvnId());
+			TextView txtGroup = (TextView) row.findViewById(R.id.txtGroup);
+			txtGroup.setText(currentGroup.getGrpId());
 
-			TextView txtDescr = (TextView) row.findViewById(R.id.txtEventDescr);
-			txtDescr.setText(currentEvent.getEvnDescription());
-			
-			//if( !currentEvent.getFlgShowed() ){
-				//row.findViewById(R.id.panelEventName).setBackgroundColor(getResources().getColor(R.color.LightSalmon));
-			//}
-			
+			TextView txtDescr = (TextView) row.findViewById(R.id.txtGroupDescr);
+			txtDescr.setText(currentGroup.getGrpDescription());
+						
 			return (row);
 		}
 	}//class

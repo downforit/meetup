@@ -1,9 +1,10 @@
 package it.marberpp.myevents.login;
 
-import it.marberpp.myevents.NetworkHelper;
+import mymeeting.exceptions.C_NetworkKeyDuplicateException;
+import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
-import it.marberpp.myevents.services.ServicesUtils;
-import it.marberpp.myevents.services.pojo.GenericResponse;
+import it.marberpp.myevents.network.NetworkHelper;
+import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.ThreadUtilities;
 import android.app.Activity;
 import android.content.Context;
@@ -21,9 +22,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class LoginNewFragment extends SherlockFragment implements View.OnClickListener {
-	public static final String PARAM_USERNAME = "username";
-	public static final String PARAM_PASSWORD = "password";
-	
 	private LoginListener listener = null;
 	
 	private EditText txtUsername = null;
@@ -42,11 +40,11 @@ public class LoginNewFragment extends SherlockFragment implements View.OnClickLi
 			Bundle args = new Bundle();
 			
 			if(username != null && username.length() > 0){
-				args.putString(PARAM_USERNAME, username);
+				args.putString(MainLib.PARAM_USERNAME, username);
 			}
 
 			if(password != null && password.length() > 0){
-				args.putString(PARAM_PASSWORD, password);
+				args.putString(MainLib.PARAM_PASSWORD, password);
 			}
 			
 			f.setArguments(args);
@@ -72,8 +70,8 @@ public class LoginNewFragment extends SherlockFragment implements View.OnClickLi
 		this.progBarOk = (ProgressBar) result.findViewById(R.id.lgnNewProgBarOk);
 		
 		if(getArguments() != null){
-			String username = getArguments().getString(PARAM_USERNAME);
-			String password = getArguments().getString(PARAM_PASSWORD);
+			String username = getArguments().getString(MainLib.PARAM_USERNAME);
+			String password = getArguments().getString(MainLib.PARAM_PASSWORD);
 	
 			if(username != null){
 				this.txtUsername.setText(username);
@@ -129,19 +127,20 @@ public class LoginNewFragment extends SherlockFragment implements View.OnClickLi
 
 
 	//***************************************************
-	public void manageNewAccountResponse(GenericResponse response){
+    //***************************************************
+	public void createUSerTerminated(boolean loginCompleted){
 
-		if(response != null && response.isServiceSuccessed()){
+		if(loginCompleted){
 			Toast.makeText(getActivity(), R.string.lgnNewConfirmedMsg, Toast.LENGTH_LONG).show();
 			this.listener.newUserCreated(this.txtUsername.getText().toString(), this.txtPassword1.getText().toString());
 			
 			this.btnOk.setEnabled(false);
-		} else {
-			if(response.getErrorCode() == ServicesUtils.HIB_ERROR_KEY_VIOLATION){
-				Toast.makeText(getActivity(), R.string.lgnNewUsernameExistMsg, Toast.LENGTH_LONG).show();
-			} else{
-				Toast.makeText(getActivity(), R.string.lgnNewFailedMessage, Toast.LENGTH_LONG).show();
-			}
+//		} else {
+//			if(response.getErrorCode() == ServicesUtils.HIB_ERROR_KEY_VIOLATION){
+//				Toast.makeText(getActivity(), R.string.lgnNewUsernameExistMsg, Toast.LENGTH_LONG).show();
+//			} else{
+//				Toast.makeText(getActivity(), R.string.lgnNewFailedMessage, Toast.LENGTH_LONG).show();
+//			}
 		}
 		
 
@@ -157,7 +156,8 @@ public class LoginNewFragment extends SherlockFragment implements View.OnClickLi
 	private class NewAccountTask extends AsyncTask<Context, Void, Void> {
 		String username;
 		String password;
-		GenericResponse respose = null;
+
+		Throwable exception = null;
 		
 		public NewAccountTask(String username, String password){
 			this.username = username;
@@ -167,19 +167,24 @@ public class LoginNewFragment extends SherlockFragment implements View.OnClickLi
 		@Override
 		protected Void doInBackground(Context... ctxt) {
 			try{
-				respose = NetworkHelper.createNewAccount(this.username, this.password);
+				NetworkHelper.createNewAccount(this.username, this.password);
 			}catch(Throwable ex){
-				respose = new GenericResponse();
-				respose.setServiceSuccessed(false);
-				respose.setErrorCode(-1);
-				respose.setDescription(ex.getMessage());
+				this.exception = ex;
 			}
-			return (null);
+			return null;
 		}
 
 		@Override
 		public void onPostExecute(Void arg0) {
-			LoginNewFragment.this.manageNewAccountResponse(respose);
+			if(this.exception != null){
+				if(this.exception instanceof C_NetworkKeyDuplicateException){
+					Toast.makeText(getActivity(), R.string.usernameAlreadyUsed, Toast.LENGTH_LONG).show();
+				} else {
+					ExceptionsUtils.standardManagingException(this.exception, getActivity());
+				}
+			}
+
+			LoginNewFragment.this.createUSerTerminated(this.exception == null);
 		}
 	}// class
 	

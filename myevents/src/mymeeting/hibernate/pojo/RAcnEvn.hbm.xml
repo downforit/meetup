@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 7-giu-2013 0.23.19 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="mymeeting.hibernate.pojo.RAcnEvn" table="r_acn_evn" catalog="my_meeting">
+        <composite-id name="id" class="mymeeting.hibernate.pojo.RAcnEvnId">
+            <key-property name="acnId" type="string">
+                <column name="ACN_ID" length="50" />
+            </key-property>
+            <key-property name="evnId" type="string">
+                <column name="EVN_ID" length="200" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="event" class="mymeeting.hibernate.pojo.Event" update="false" insert="false" fetch="select">
+            <column name="EVN_ID" length="200" not-null="true" />
+        </many-to-one>
+        <many-to-one name="account" class="mymeeting.hibernate.pojo.Account" update="false" insert="false" fetch="select">
+            <column name="ACN_ID" length="50" not-null="true" />
+        </many-to-one>
+        <property name="acnevnConfirmed" type="java.lang.Boolean">
+            <column name="ACNEVN_CONFIRMED" />
+        </property>
+        <property name="acnevnConfirmationDate" type="timestamp">
+            <column name="ACNEVN_CONFIRMATION_DATE" length="19" />
+        </property>
+        <property name="flgNeedSync" type="java.lang.Boolean">
+            <column name="FLG_NEED_SYNC" />
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="LAST_UPDATE" length="19" not-null="true" />
+        </property>
+        <property name="flgShowed" type="java.lang.Boolean">
+            <column name="FLG_SHOWED" />
+        </property>
+        <property name="flgDeleted" type="java.lang.Boolean">
+            <column name="FLG_DELETED" />
+        </property>
+    </class>
+</hibernate-mapping>

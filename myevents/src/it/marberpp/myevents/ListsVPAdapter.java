@@ -1,19 +1,23 @@
-package it.marberpp.myevents.events;
+package it.marberpp.myevents;
 
-import it.marberpp.myevents.MainDataRetainFragment;
 //import android.R;
 import it.marberpp.myevents.R;
+import it.marberpp.myevents.events.EventsListFragment;
+import it.marberpp.myevents.groups.GroupsListFragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ListFragment;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-public class EventsVPAdapter extends FragmentStatePagerAdapter {
-	public static final int NUM_PAGES = 2;
+public class ListsVPAdapter extends FragmentStatePagerAdapter {
+	public static final int NUM_PAGES = 4;
 
 	public static final int ID_EVENTS_LIST_FUTURES = 0;
 	public static final int ID_EVENTS_LIST_PAST = 1;
+	public static final int ID_GROUPS_LIST_OWNED = 2;
+	public static final int ID_GROUPS_LIST_OTHER = 3;
 	
 	
 	SherlockFragmentActivity ctxt;
@@ -21,7 +25,7 @@ public class EventsVPAdapter extends FragmentStatePagerAdapter {
 	MainDataRetainFragment dataRetain;
 
 	//***************************************************
-	public EventsVPAdapter(SherlockFragmentActivity ctxt, MainDataRetainFragment dataRetain) {
+	public ListsVPAdapter(SherlockFragmentActivity ctxt, MainDataRetainFragment dataRetain) {
 		super(ctxt.getSupportFragmentManager());
 		
 		this.ctxt = ctxt;
@@ -32,9 +36,15 @@ public class EventsVPAdapter extends FragmentStatePagerAdapter {
 	//***************************************************
 	@Override
 	public Fragment getItem(int position) {
-		EventsListFragment result = EventsListFragment.newInstance(position);
 		
-		this.dataRetain.addEventsListFragment(result, position);
+		ListFragment result;
+		if(position == ID_EVENTS_LIST_FUTURES || position == ID_EVENTS_LIST_PAST){
+			result = EventsListFragment.newInstance(position);
+			this.dataRetain.addListFragment(result, position);
+		} else {
+			result = GroupsListFragment.newInstance(position);
+			this.dataRetain.addListFragment(result, position);
+		}
 		
 		return result;
 	}
@@ -53,8 +63,14 @@ public class EventsVPAdapter extends FragmentStatePagerAdapter {
 		switch(position){
 		case ID_EVENTS_LIST_FUTURES:
 			return this.ctxt.getString(R.string.mainVPTabFutureEvents);
-		default:
+		case ID_EVENTS_LIST_PAST:
 			return this.ctxt.getString(R.string.mainVPTabPastEvents);
+		case ID_GROUPS_LIST_OWNED:
+			return this.ctxt.getString(R.string.mainVPTabOwnedGroups);
+		case ID_GROUPS_LIST_OTHER:
+			return this.ctxt.getString(R.string.mainVPTabOtherGroups);
 		}
+		
+		return "";
 	}
 }

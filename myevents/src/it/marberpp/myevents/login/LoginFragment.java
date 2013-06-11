@@ -1,9 +1,9 @@
 package it.marberpp.myevents.login;
 
-import it.marberpp.myevents.NetworkHelper;
+import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
-import it.marberpp.myevents.services.ServicesUtils;
-import it.marberpp.myevents.services.pojo.GenericResponse;
+import it.marberpp.myevents.network.NetworkHelper;
+import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.ThreadUtilities;
 import android.app.Activity;
 import android.content.Context;
@@ -22,8 +22,6 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class LoginFragment extends SherlockFragment implements View.OnClickListener {
-	public static final String PARAM_USERNAME = "username";
-	public static final String PARAM_PASSWORD = "password";
 	
 	private LoginListener listener = null;
 	
@@ -43,11 +41,11 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 			Bundle args = new Bundle();
 			
 			if(username != null && username.length() > 0){
-				args.putString(PARAM_USERNAME, username);
+				args.putString(MainLib.PARAM_USERNAME, username);
 			}
 
 			if(password != null && password.length() > 0){
-				args.putString(PARAM_PASSWORD, password);
+				args.putString(MainLib.PARAM_PASSWORD, password);
 			}
 			
 			f.setArguments(args);
@@ -75,8 +73,8 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 		this.lblNewUser.setOnClickListener(this);
 		
 		if(getArguments() != null){
-			String username = getArguments().getString(PARAM_USERNAME);
-			String password = getArguments().getString(PARAM_PASSWORD);
+			String username = getArguments().getString(MainLib.PARAM_USERNAME);
+			String password = getArguments().getString(MainLib.PARAM_PASSWORD);
 	
 			if(username != null){
 				this.txtUsername.setText(username);
@@ -130,25 +128,25 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 	
 
     //***************************************************
-	public void manageLoginResponse(GenericResponse response){
-		if(response != null && response.isServiceSuccessed()){
+	public void loginTerminated(boolean loginCompleted){
+		if(loginCompleted){
 			Toast.makeText(getActivity(), R.string.loginConfirmedMsg, Toast.LENGTH_LONG).show();
 			this.listener.loginCompleted(this.txtUsername.getText().toString(), this.txtPassword.getText().toString());
 			
 			this.btnOk.setEnabled(false);
 			this.lblNewUser.setEnabled(false);
-		} else {
-			if(response == null){
-				Toast.makeText(getActivity(), R.string.unexpectedErrorMessage, Toast.LENGTH_LONG).show();
-			} else {
-				if(response.getErrorCode() == ServicesUtils.NET_ERROR_NETWORK_COMUNICATION){
-					Toast.makeText(getActivity(), R.string.networkFailedMessage, Toast.LENGTH_LONG).show();
-				} else if(response.getErrorCode() == ServicesUtils.NET_ERROR_LOGIN_FAILED){
-					Toast.makeText(getActivity(), R.string.loginFailedMessage, Toast.LENGTH_LONG).show();
-				} else {
-					Toast.makeText(getActivity(), R.string.unexpectedErrorMessage, Toast.LENGTH_LONG).show();
-				}
-			}
+//		} else {
+//			if(response == null){
+//				Toast.makeText(getActivity(), R.string.unexpectedErrorMessage, Toast.LENGTH_LONG).show();
+//			} else {
+//				if(response.getErrorCode() == ServicesUtils.NET_ERROR_NETWORK_COMUNICATION){
+//					Toast.makeText(getActivity(), R.string.networkFailedMessage, Toast.LENGTH_LONG).show();
+//				} else if(response.getErrorCode() == ServicesUtils.NET_ERROR_LOGIN_FAILED){
+//					Toast.makeText(getActivity(), R.string.loginFailedMessage, Toast.LENGTH_LONG).show();
+//				} else {
+//					Toast.makeText(getActivity(), R.string.unexpectedErrorMessage, Toast.LENGTH_LONG).show();
+//				}
+//			}
 		}
 
 		this.btnOk.setVisibility(View.VISIBLE);
@@ -164,7 +162,9 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 	private class LoginTask extends AsyncTask<Context, Void, Void> {
 		String username;
 		String password;
-		GenericResponse response = null;
+		//GenericResponse response = null;
+
+		Throwable exception = null;
 		
 		public LoginTask(String username, String password){
 			this.username = username;
@@ -174,19 +174,26 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 		@Override
 		protected Void doInBackground(Context... ctxt) {
 			try{
-				response = NetworkHelper.doLogin(this.username, this.password);
+				NetworkHelper.doLogin(this.username, this.password);
 			}catch(Throwable ex){
+				/*
 				response = new GenericResponse();
 				response.setServiceSuccessed(false);
 				response.setErrorCode(-1);
 				response.setDescription(ex.getMessage());
+				*/
+				this.exception = ex;
 			}
 			return (null);
 		}
 
 		@Override
 		public void onPostExecute(Void arg0) {
-			LoginFragment.this.manageLoginResponse(response);
+			if(this.exception != null){
+				ExceptionsUtils.standardManagingException(this.exception, getActivity());
+			}
+			
+			LoginFragment.this.loginTerminated(this.exception == null);
 		}
 	}// class PrefsLoadTask
 
