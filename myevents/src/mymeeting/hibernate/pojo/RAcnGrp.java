@@ -105,10 +105,5 @@ public class RAcnGrp  implements java.io.Serializable {
     public void setFlgDeleted(Boolean flgDeleted) {
         this.flgDeleted = flgDeleted;
     }
-
-
-
-
+                           
 }
-
-
