@@ -4,6 +4,7 @@ package it.marberpp.myevents.hibernate;
 
 
 import it.marberpp.myevents.network.ServicesUtils;
+import it.marberpp.myevents.utils.ThreadUtilities;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +18,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.SystemClock;
 import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -294,7 +294,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 		}
 		
-		SystemClock.sleep(3000);
+		ThreadUtilities.sleep(3000);
 
 		return result;
 	}
@@ -396,7 +396,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		
-		SystemClock.sleep(3000);
+		ThreadUtilities.sleep(3000);
 
 		return result;
 		
@@ -501,7 +501,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			}
 		}
 		
-		SystemClock.sleep(3000);
+		ThreadUtilities.sleep(3000);
 
 		return result;
 	}
@@ -535,7 +535,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		}
 
 		
-		SystemClock.sleep(3000);
+		ThreadUtilities.sleep(3000);
 
 		return result;
 		

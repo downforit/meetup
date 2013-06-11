@@ -50,5 +50,7 @@
     <string name="cancel">Cancel</string>
     <string name="group">Group</string>
     <string name="date">Date</string>
+    <string name="refreshLists">Refresh lists</string>
+    <string name="reloadLists">Relaod lists</string>
     
 </resources>

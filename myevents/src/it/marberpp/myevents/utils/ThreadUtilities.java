@@ -3,6 +3,7 @@ package it.marberpp.myevents.utils;
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class ThreadUtilities {
@@ -21,7 +22,7 @@ public class ThreadUtilities {
 	//************************************************
 	static public void sleep(int millis){
 		try{
-			
+			 //SystemClock.sleep(millis);
 		}catch (Exception e) {
 			Log.d(ThreadUtilities.class.getSimpleName(), "eccezione sulla sleep " + millis);
 		}

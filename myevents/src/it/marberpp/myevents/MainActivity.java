@@ -133,9 +133,18 @@ public class MainActivity extends SherlockFragmentActivity {
 			synchronizeDatabase();
 			return true;
 
+		case R.id.refreshLists:
+			this.dataRetain.refreshLists();
+			return true;
+
+		case R.id.reloadLists:
+			this.dataRetain.reloadLists();
+			return true;
+
 		case R.id.resetDb:
 			resetDatabase();
 			return true;
+
 		case R.id.menuAdd:
 			int currentPageId = this.listsVP.getCurrentItem();
 			
@@ -169,14 +178,15 @@ public class MainActivity extends SherlockFragmentActivity {
 				this.username = data.getStringExtra(MainLib.PARAM_USERNAME);
 				this.password = data.getStringExtra(MainLib.PARAM_PASSWORD);
 				
-				if( !oldUsername.equals(this.username) ){
-					Log.d(getClass().getSimpleName(), "##### RESET DATABASE");
-					DatabaseHelper.getInstance(MainActivity.this).resetDatabase();
-					//this.synchronizeDatabase();
-				}
-				
 				this.dataRetain.setUsername(this.username);
 				this.logged = true;
+
+				if( oldUsername == null || !oldUsername.equals(this.username) ){
+					Log.d(getClass().getSimpleName(), "##### RESET DATABASE");
+					DatabaseHelper.getInstance(MainActivity.this).resetDatabase();
+				}
+				this.synchronizeDatabase();
+				
 				this.setLoginVerified(true);
 				this.emptyLists();
 				this.savePreferences();
@@ -184,13 +194,13 @@ public class MainActivity extends SherlockFragmentActivity {
 			break;
 		case EventNewActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_OK){
-				this.dataRetain.reloadEvents();
+				this.dataRetain.reloadLists();
 			}
 			
 			break;
 		case GroupNewActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_OK){
-				this.dataRetain.reloadEvents();
+				this.dataRetain.reloadLists();
 			}
 			
 			break;

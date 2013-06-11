@@ -25,4 +25,12 @@
 		android:id="@+id/resetDb"
 		android:showAsAction="never"
 		android:title="@string/resetDb"/>
+	<item
+		android:id="@+id/refreshLists"
+		android:showAsAction="never"
+		android:title="@string/refreshLists"/>
+	<item
+		android:id="@+id/reloadLists"
+		android:showAsAction="never"
+		android:title="@string/reloadLists"/>
 </menu>

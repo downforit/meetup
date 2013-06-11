@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -168,11 +169,21 @@ public class MainDataRetainFragment extends SherlockFragment {
 	}
 	
 
+	//*********************************************
 	public void setUsername(String username){
 		this.username = username;
 		this.loadAndDeliveryData();
 	}
 	
+	
+	//*********************************************
+	public void refreshLists(){
+		this.futureEventsDelivered = false;
+		this.pastEventsDelivered = false;
+		this.ownedGroupsDelivered = false;
+		this.otherGroupsDelivered = false;
+		this.loadAndDeliveryData();
+	}
 	
 	//*********************************************
 	public void invalidateData(){
@@ -205,7 +216,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 
 
 	//*********************************************
-	public synchronized void reloadEvents(){
+	public synchronized void reloadLists(){
 		databaseSynchronizationStarted();
 		databaseSynchronizationCompleted();
 	}
@@ -214,6 +225,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 	//*********************************************
 	public synchronized void databaseSynchronizationStarted(){
 		
+		this.synchronizerRunning = true;
 		for(int i = 0; i < elfList.size(); i++){
 			if(i == ListsVPAdapter.ID_EVENTS_LIST_FUTURES || i == ListsVPAdapter.ID_EVENTS_LIST_PAST){
 				((EventsListFragment)this.elfList.get(i)).setEvents(null);
@@ -227,6 +239,8 @@ public class MainDataRetainFragment extends SherlockFragment {
 	//*********************************************
 	public synchronized void databaseSynchronizationCompleted(){
 		this.invalidateData();
+		
+		this.synchronizerRunning = false;
 		this.loadAndDeliveryData();
 	}
 	
@@ -325,19 +339,6 @@ public class MainDataRetainFragment extends SherlockFragment {
 	}
 	
 	
-	
-	//*********************************************
-	public boolean isSynchronizerRunning() {
-		return synchronizerRunning;
-	}
-
-
-	//*********************************************
-	public void setSynchronizerRunning(boolean synchronizerRunning) {
-		this.synchronizerRunning = synchronizerRunning;
-	}
-
-
 
 	//#####################################################################
 	//#####################################################################
@@ -354,6 +355,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 		public LoadEventsTask(int dataType, String username){
 			this.dataType = dataType;
 			this.username = username;
+			Log.e(getClass().getSimpleName(), ">>>>>>>>> thread type = " + this.dataType);
 		}
 		
 		@Override
@@ -389,6 +391,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 					return;
 				}
 				
+				Log.e(getClass().getSimpleName(), "<<<<<<< thread type = " + this.dataType);
 
 				switch(dataType){
 				case DATA_TYPE_FUTURE_EVENTS:
