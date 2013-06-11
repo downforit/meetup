@@ -11,7 +11,7 @@
         android:background="@color/Honeydew" >
 
         <TextView
-            android:id="@+id/lblEgroup"
+            android:id="@+id/lblGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/txtGroup"
@@ -61,7 +61,7 @@
             android:id="@+id/lblTwoPointSep2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/lblEventDescr"
+            android:layout_toRightOf="@id/lblGroupDescr"
             android:text="@string/twoPointSep"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/Gray" />
