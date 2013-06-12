@@ -2,6 +2,7 @@ package it.marberpp.myevents.groups;
 
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
+import it.marberpp.myevents.utils.GenericFragmentInterface;
 
 import java.util.List;
 
@@ -19,7 +20,8 @@ import android.widget.TextView;
 
 
 public class GroupsListFragment extends ListFragment {
-
+	public static final int PAGE_ID_SELECTION_MODE = 999;
+	
 	boolean fragmentAttached = false;
 	
 	List<Group> groups;
@@ -27,6 +29,8 @@ public class GroupsListFragment extends ListFragment {
 
 	View vProgressBar = null;
 	ListView groupsListView = null;
+	
+	private GenericFragmentInterface genericListener = null;
 
 	
 	//***************************************************
@@ -93,9 +97,18 @@ public class GroupsListFragment extends ListFragment {
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Group currentGroup = this.groups.get(position);
 		
-		Intent intentTmp=new Intent(getActivity(), GroupActivity.class);
-		intentTmp.putExtra(MainLib.PARAM_GROUP_ID, currentGroup.getGrpId());
-		startActivityForResult(intentTmp, 0);
+		if(this.pageId == PAGE_ID_SELECTION_MODE){
+			Log.d(getClass().getSimpleName(), " groupId = " + currentGroup.getGrpId());
+
+			if(this.getGenericListener() != null){
+				this.getGenericListener().onFragmentResult(GroupsListFragment.class.getSimpleName(), currentGroup );
+			}
+
+		} else {
+			Intent intentTmp=new Intent(getActivity(), GroupActivity.class);
+			intentTmp.putExtra(MainLib.PARAM_GROUP_ID, currentGroup.getGrpId());
+			startActivityForResult(intentTmp, 0);
+		}
 		    
 	}
 	
@@ -110,6 +123,20 @@ public class GroupsListFragment extends ListFragment {
 		this.showContents();
 	}
 
+
+	
+	//***************************************************
+	public GenericFragmentInterface getGenericListener() {
+		return genericListener;
+	}
+
+	//***************************************************
+	public void setGenericListener(GenericFragmentInterface genericListener) {
+		this.genericListener = genericListener;
+	}
+
+	
+	
 	//***************************************************
 	private void showContents() {
 		if( !this.fragmentAttached ){
@@ -133,6 +160,10 @@ public class GroupsListFragment extends ListFragment {
 	
 	
 	
+
+
+
+
 	//###################################################
 	//###################################################
 	class GroupRowAdapter extends ArrayAdapter<Group> {

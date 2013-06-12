@@ -41,6 +41,7 @@
     <string name="unexpectedErrorMessage">ERROR: Unexpected error occurred</string>
     <string name="usernameAlreadyUsed">ATTENTION: USERNAME arleady used, try to change it</string>
     <string name="eventNameAlreadyUsed">ATTENTION: event NAME arleady used, try to change it</string>
+    <string name="needSelectAGroup">ATTENTION: you need to select a group</string>
     <string name="groupNameAlreadyUsed">ATTENTION: group NAME arleady used, try to change it</string>
     
     <string name="synchronize">Synchronize</string>
@@ -52,5 +53,6 @@
     <string name="date">Date</string>
     <string name="refreshLists">Refresh lists</string>
     <string name="reloadLists">Relaod lists</string>
+    <string name="selectAGroup">Click to select a group</string>
     
 </resources>

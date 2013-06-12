@@ -6,6 +6,7 @@ import it.marberpp.myevents.hibernate.DatabaseHelper;
 import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.ThreadUtilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mymeeting.hibernate.pojo.Event;
@@ -29,6 +30,8 @@ public class MainDataRetainFragment extends SherlockFragment {
 	private static final int DATA_TYPE_OWNED_GROUPS = 3;
 	private static final int DATA_TYPE_OTHER_GROUPS = 4;
 	
+	
+	public static MainDataRetainFragment staticInstance = null;
 	
 	SparseArray<ListFragment> elfList = new SparseArray<ListFragment>();
 	
@@ -280,31 +283,24 @@ public class MainDataRetainFragment extends SherlockFragment {
 		}//switch
 	}
 	
-	
-	//*********************************************
-	/*
-	public synchronized void addEventsListFragment(EventsListFragment fragment, int position){
-		this.elfList.put(position, fragment);
 		
-		switch(position){
-		case ListsVPAdapter.ID_EVENTS_LIST_FUTURES:
-			if(futureEvents != null){
-				fragment.setEvents(futureEvents);
-			}
-			break;
-		case ListsVPAdapter.ID_EVENTS_LIST_PAST:
-			if(pastEvents != null){
-				fragment.setEvents(pastEvents);
-			}
-			break;		
-		}//switch
-	}
-	*/
-	
 	//*********************************************
 	public synchronized ListFragment getListFragment(int position){
 		return this.elfList.get(position);
 	}
+	
+	
+	
+	//*********************************************
+	public List<Group> getAllGroups(){
+		List<Group> result = new ArrayList<Group>();
+		
+		result.addAll(this.ownedGroups);
+		result.addAll(this.otherGroups);
+		
+		return result;
+	}
+	
 	
 	
 	//*********************************************

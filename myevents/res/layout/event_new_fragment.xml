@@ -37,14 +37,16 @@
 		    android:text="@string/group" />
 	
 		<EditText
-			android:id="@id/txtGroup"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/txtEventName"
-			android:layout_toRightOf="@id/lblGroup"
-		    android:enabled="false"
-		    android:text="grp_marber"
-			android:inputType="text"/>
+		    android:id="@id/txtGroup"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@id/txtEventName"
+		    android:layout_toRightOf="@id/lblGroup"
+		    android:focusableInTouchMode="false"
+		    android:hint="@string/selectAGroup"
+		    android:paddingBottom="10dp"
+		    android:paddingTop="10dp"
+		    android:textAppearance="?android:attr/textAppearanceMedium" />
 	
 		<TextView
 		    android:id="@+id/lblDate"
@@ -82,7 +84,6 @@
 		    android:layout_toRightOf="@id/lblDescription"
 		    android:ems="10"
 		    android:inputType="textMultiLine"/>
-	
-				
+
 	</RelativeLayout>
 </ScrollView>

@@ -2,7 +2,9 @@ package it.marberpp.myevents.events;
 
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
+import it.marberpp.myevents.groups.GroupSelectActivity;
 import it.marberpp.myevents.hibernate.DatabaseHelper;
+import it.marberpp.myevents.login.LoginAcrivity;
 import it.marberpp.myevents.network.NetworkHelper;
 import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.GenericFragmentInterface;
@@ -19,12 +21,14 @@ import mymeeting.hibernate.pojo.Group;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.DatePicker;
 
@@ -66,7 +70,19 @@ public class EventNewFragment extends SherlockFragment {
 
 		this.txtEventName = (EditText) result.findViewById(R.id.txtEventName);
 		this.txtDescription = (EditText) result.findViewById(R.id.txtDescription);
-		this.txtGroup = (EditText) result.findViewById(R.id.txtGroup);
+		
+		this.txtGroup = (EditText) result.findViewById(R.id.txtGroup);//attenzione: uso EditText peeche' quando ruoto non perde il testo
+
+		this.txtGroup.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intentTmp=new Intent(getActivity(), GroupSelectActivity.class);
+				startActivityForResult(intentTmp, GroupSelectActivity.ACTIVITY_ID);
+			}
+		});
+		
+		
+		
 		this.DatePicker = (DatePicker) result.findViewById(R.id.datePicker);
 
 		this.DatePicker.setCalendarViewShown(false);
@@ -93,6 +109,33 @@ public class EventNewFragment extends SherlockFragment {
         }
     }	
 	
+
+
+	//***********************************************
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch(requestCode){
+		case GroupSelectActivity.ACTIVITY_ID:
+			if(resultCode == Activity.RESULT_CANCELED){
+				//non faccio niente
+			} else if(resultCode == Activity.RESULT_OK){
+				String groupId = data.getStringExtra(MainLib.PARAM_GROUP_ID);
+
+				this.txtGroup.setText(groupId);
+				this.txtGroup.setTag(true);
+				
+			}
+			
+			
+			break;
+		}
+	}
+
+	
+	//##########################################
+	//##########################################
+
+	
 	
 	//***************************************************
 	public void eventCreated(){
@@ -104,6 +147,14 @@ public class EventNewFragment extends SherlockFragment {
 	public void save(){
 		Event event = new Event();
 		Group group = new Group();
+	
+
+		if(this.txtGroup.getText().length() <= 0 ){
+			Toast.makeText(getActivity(), R.string.needSelectAGroup, Toast.LENGTH_LONG).show();
+			
+			return;
+		}
+		
 		
 		event.setEvnId(this.txtEventName.getText().toString());
 		event.setEvnDescription(this.txtDescription.getText().toString());
@@ -173,5 +224,9 @@ public class EventNewFragment extends SherlockFragment {
 			}
 		}
 	}// class PrefsLoadTask
+
+
+
+
 	
 }

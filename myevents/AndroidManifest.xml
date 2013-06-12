@@ -30,6 +30,7 @@
         <activity android:name=".events.EventNewActivity"></activity>
         <activity android:name=".groups.GroupActivity"></activity>
         <activity android:name=".groups.GroupNewActivity"></activity>
+        <activity android:name=".groups.GroupSelectActivity"></activity>
         </application>
 
 </manifest>

@@ -52,7 +52,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	private ViewPager listsVP = null;
 	private ListsVPAdapter listsVPAdapter = null;
 
-	private MainDataRetainFragment dataRetain = null;
+	//private MainDataRetainFragment dataRetain = null;
 	
 	
 	private String username = null;
@@ -78,17 +78,17 @@ public class MainActivity extends SherlockFragmentActivity {
 		getSupportActionBar().setHomeButtonEnabled(true);// serve solo se si imposta un SKD maggiore di 11	
 		
 		
-		dataRetain = (MainDataRetainFragment) getSupportFragmentManager().findFragmentByTag(DATA_RETAIN_FRAGMENT_ID);
-		if (dataRetain == null) {
-			dataRetain = new MainDataRetainFragment();
-			getSupportFragmentManager().beginTransaction().add(dataRetain, DATA_RETAIN_FRAGMENT_ID).commit();
+		MainDataRetainFragment.staticInstance = (MainDataRetainFragment) getSupportFragmentManager().findFragmentByTag(DATA_RETAIN_FRAGMENT_ID);
+		if (MainDataRetainFragment.staticInstance == null) {
+			MainDataRetainFragment.staticInstance = new MainDataRetainFragment();
+			getSupportFragmentManager().beginTransaction().add(MainDataRetainFragment.staticInstance, DATA_RETAIN_FRAGMENT_ID).commit();
 		}
 		
-		this.dataRetain.prefsNeedToBeDelivered();
+		MainDataRetainFragment.staticInstance.prefsNeedToBeDelivered();
 		
 		
 		this.listsVP = (ViewPager) this.findViewById(R.id.evnlViewPager);
-		this.listsVPAdapter = new ListsVPAdapter(this, dataRetain);
+		this.listsVPAdapter = new ListsVPAdapter(this, MainDataRetainFragment.staticInstance);
 		this.listsVP.setAdapter(this.listsVPAdapter);		
 		this.listsVP.setCurrentItem(ListsVPAdapter.ID_EVENTS_LIST_FUTURES);
 		
@@ -134,11 +134,11 @@ public class MainActivity extends SherlockFragmentActivity {
 			return true;
 
 		case R.id.refreshLists:
-			this.dataRetain.refreshLists();
+			MainDataRetainFragment.staticInstance.refreshLists();
 			return true;
 
 		case R.id.reloadLists:
-			this.dataRetain.reloadLists();
+			MainDataRetainFragment.staticInstance.reloadLists();
 			return true;
 
 		case R.id.resetDb:
@@ -178,7 +178,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				this.username = data.getStringExtra(MainLib.PARAM_USERNAME);
 				this.password = data.getStringExtra(MainLib.PARAM_PASSWORD);
 				
-				this.dataRetain.setUsername(this.username);
+				MainDataRetainFragment.staticInstance.setUsername(this.username);
 				this.logged = true;
 
 				if( oldUsername == null || !oldUsername.equals(this.username) ){
@@ -194,13 +194,13 @@ public class MainActivity extends SherlockFragmentActivity {
 			break;
 		case EventNewActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_OK){
-				this.dataRetain.reloadLists();
+				MainDataRetainFragment.staticInstance.reloadLists();
 			}
 			
 			break;
 		case GroupNewActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_OK){
-				this.dataRetain.reloadLists();
+				MainDataRetainFragment.staticInstance.reloadLists();
 			}
 			
 			break;
@@ -214,7 +214,7 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	
 	public void synchronizeDatabase(){
-		this.dataRetain.databaseSynchronizationStarted();
+		MainDataRetainFragment.staticInstance.databaseSynchronizationStarted();
 		
 		ThreadUtilities.executeAsyncTask(new synkDbTask(this.username, synkDbTask.OP_SYNC), this);
 	}
@@ -223,7 +223,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	public void resetDatabase(){
 		
 
-		this.dataRetain.databaseSynchronizationStarted();
+		MainDataRetainFragment.staticInstance.databaseSynchronizationStarted();
 		
 		ThreadUtilities.executeAsyncTask(new synkDbTask(this.username, synkDbTask.OP_RESET), this);
 	}
@@ -251,7 +251,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			this.username = prefs.getString(MainLib.PREFS_USERNAME, null);
 			this.password = prefs.getString(MainLib.PREFS_PASSWORD, null);
 
-			this.dataRetain.setUsername(this.username);
+			MainDataRetainFragment.staticInstance.setUsername(this.username);
 
 			this.verifyActivityStatus();
 		}
@@ -308,11 +308,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		//this.eventsVPAdapter.setEvents(events);
 		
 		Log.d(getClass().getSimpleName(), "##### START setEvents");
-		if(this.dataRetain != null){
-			if(this.dataRetain.getListFragment(FragmentID) == null){
+		if(MainDataRetainFragment.staticInstance != null){
+			if(MainDataRetainFragment.staticInstance.getListFragment(FragmentID) == null){
 				Log.d(getClass().getSimpleName(), "****************** attenzione: il fragment non è ancora pronto al completamento del dataretain");
 			} else {
-				((EventsListFragment)this.dataRetain.getListFragment(FragmentID)).setEvents(events);
+				((EventsListFragment)MainDataRetainFragment.staticInstance.getListFragment(FragmentID)).setEvents(events);
 			}
 		} else {
 			Log.d(getClass().getSimpleName(), "DATARETAIN uguale a null");
@@ -337,11 +337,11 @@ public class MainActivity extends SherlockFragmentActivity {
 		//this.eventsVPAdapter.setEvents(events);
 		
 		Log.d(getClass().getSimpleName(), "##### START setEvents");
-		if(this.dataRetain != null){
-			if(this.dataRetain.getListFragment(FragmentID) == null){
+		if(MainDataRetainFragment.staticInstance != null){
+			if(MainDataRetainFragment.staticInstance.getListFragment(FragmentID) == null){
 				Log.d(getClass().getSimpleName(), "****************** attenzione: il fragment non è ancora pronto al completamento del dataretain");
 			} else {
-				((GroupsListFragment)this.dataRetain.getListFragment(FragmentID)).setGroups(groups);
+				((GroupsListFragment)MainDataRetainFragment.staticInstance.getListFragment(FragmentID)).setGroups(groups);
 			}
 		} else {
 			Log.d(getClass().getSimpleName(), "DATARETAIN uguale a null");
@@ -354,7 +354,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	//***********************************************
 	public void setLoginVerified(boolean loginVerified){
 		this.loginVerified = loginVerified;
-		this.dataRetain.setLoginVerified(loginVerified);
+		MainDataRetainFragment.staticInstance.setLoginVerified(loginVerified);
 	}
 
 	
@@ -404,7 +404,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				ExceptionsUtils.standardManagingException(this.exception, MainActivity.this);
 			}
 			
-			MainActivity.this.dataRetain.databaseSynchronizationCompleted();
+			MainDataRetainFragment.staticInstance.databaseSynchronizationCompleted();
 		}
 	}// class PrefsLoadTask
 	
