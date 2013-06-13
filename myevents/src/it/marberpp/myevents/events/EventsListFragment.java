@@ -6,8 +6,6 @@ import it.marberpp.myevents.R;
 import java.util.List;
 
 import mymeeting.hibernate.pojo.Event;
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -28,6 +26,7 @@ public class EventsListFragment extends ListFragment {
 	int pageId = -1;
 
 	View vProgressBar = null;
+	EventRowAdapter eventsAdapter;
 	ListView eventsListView = null;
 
 	
@@ -94,7 +93,7 @@ public class EventsListFragment extends ListFragment {
 	//***************************************************
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		Event currentEvent = this.events.get(position);
+		Event currentEvent = eventsAdapter.getItem(position);
 		
 		Intent intentTmp=new Intent(getActivity(), EventActivity.class);
 		intentTmp.putExtra(MainLib.PARAM_EVENT_ID, currentEvent.getEvnId());
@@ -121,9 +120,10 @@ public class EventsListFragment extends ListFragment {
 		}
 
 		if(this.events != null){
+			eventsAdapter = new EventRowAdapter(events);
 			this.vProgressBar.setVisibility(View.GONE);
 			this.eventsListView.setVisibility(View.VISIBLE);
-			this.eventsListView.setAdapter(new EventRowAdapter());
+			this.eventsListView.setAdapter(eventsAdapter);
 		} else {
 			this.vProgressBar.setVisibility(View.VISIBLE);
 			this.eventsListView.setVisibility(View.GONE);
@@ -139,30 +139,39 @@ public class EventsListFragment extends ListFragment {
 	//###################################################
 	//###################################################
 	class EventRowAdapter extends ArrayAdapter<Event> {
-		EventRowAdapter() {
-			super(EventsListFragment.this.getActivity(), R.layout.events_list_row,R.id.txtEvent, EventsListFragment.this.events);
+		EventWrapper eventWrapper;
+		
+		EventRowAdapter(List<Event> events) {
+			super(getActivity(), R.id.txtEvent, events);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = super.getView(position, convertView, parent);
-
-			Event currentEvent = events.get(position);
-			
-			TextView txtEvent = (TextView) row.findViewById(R.id.txtEvent);
-			txtEvent.setText(currentEvent.getEvnId());
-
-			TextView txtDescr = (TextView) row.findViewById(R.id.txtEventDescr);
-			txtDescr.setText(currentEvent.getEvnDescription());
-			
-			//if( !currentEvent.getFlgShowed() ){
-				//row.findViewById(R.id.panelEventName).setBackgroundColor(getResources().getColor(R.color.LightSalmon));
-			//}
-			
-			return (row);
+			if (convertView == null) {
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.events_list_row, null);
+				eventWrapper = new EventWrapper(convertView);
+				convertView.setTag(eventWrapper);
+			} else {
+				eventWrapper = (EventWrapper) convertView.getTag();
+			}
+			eventWrapper.populateEvent(getItem(position));
+			return convertView;
 		}
 	}//class
 	
-	
+	private static class EventWrapper {
+		private TextView txtEvent;
+		private TextView txtDescr;
+		
+		public EventWrapper(View v) {
+			txtEvent = (TextView) v.findViewById(R.id.txtEvent);
+			txtDescr = (TextView) v.findViewById(R.id.txtEventDescr);
+		}
+		
+		public void populateEvent(Event event) {
+			txtEvent.setText(event.getEvnId());
+			txtDescr.setText(event.getEvnDescription());
+		}
+	}
 
 }//class
