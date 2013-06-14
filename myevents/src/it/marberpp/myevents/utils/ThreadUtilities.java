@@ -22,7 +22,8 @@ public class ThreadUtilities {
 	//************************************************
 	static public void sleep(int millis){
 		try{
-			 //SystemClock.sleep(millis);
+			if(millis != 3000)
+			 SystemClock.sleep(millis);
 		}catch (Exception e) {
 			Log.d(ThreadUtilities.class.getSimpleName(), "eccezione sulla sleep " + millis);
 		}

@@ -18,7 +18,7 @@ public class ServicesUtils {
   //public static final String DNS_SERVER = "192.168.136.229";
   //public static final String DNS_SERVER = "10.37.130.4";
   //public static final String DNS_SERVER = "192.168.0.14";
-  //public static final String DNS_SERVER = "192.168.43.HTTP_OP_NEW_EVENT150";
+  //public static final String DNS_SERVER = "192.168.43.150";
   public static final String DNS_SERVER = "46.105.16.216";
   
   public static final String HTTP_SERVICE_URI = "/mymeeting/eventservice";
@@ -28,6 +28,7 @@ public class ServicesUtils {
   public static final String HTTP_PARAM_OPERATION = "op";
   public static final String HTTP_PARAM_USERNAME = "uname";
   public static final String HTTP_PARAM_PASSWORD = "pwd";
+  public static final String HTTP_PARAM_GROUP_ID = "grpid";
   public static final String HTTP_PARAM_LAST_UPDATE = "lastUp";
 
   public static final String HTTP_OP_GET_EVENTS = "getEvents";
@@ -36,7 +37,10 @@ public class ServicesUtils {
   public static final String HTTP_OP_SYNC_EVENTS = "syncevents";
   public static final String HTTP_OP_NEW_EVENT = "newevent";
   public static final String HTTP_OP_SYNC_GROUPS = "syncgroups";
+  public static final String HTTP_OP_SYNC_R_ACN_GRP = "syncracngrp";
   public static final String HTTP_OP_NEW_GROUP = "newgroup";
+  public static final String HTTP_OP_SEARCH_ACCOUNT = "searchaccnt";
+  public static final String HTTP_OP_ADD_ACCOUNT_TO_GROUP = "addacntogrp";
   
   
   public static final int NET_ERROR_NETWORK_COMUNICATION = -6567;

@@ -14,17 +14,20 @@ import mymeeting.exceptions.C_DatabaseException;
 import mymeeting.hibernate.pojo.Account;
 import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
+import mymeeting.hibernate.pojo.RAcnGrp;
+import mymeeting.hibernate.pojo.RAcnGrpId;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+	private static final String tables[] = {"event", "groups", "r_acn_grp"};
 	private static final String DATABASE_NAME = "myevents.db";
 	private static final int SCHEMA_VERSION = 1;
 	private static DatabaseHelper singleton = null;
+	public static boolean databaseRegenerated = false;
 	//private Context ctxt = null;
 
 	//***************************************************
@@ -102,7 +105,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 					+ "FOREIGN KEY ('ACN_ID_OWNER') REFERENCES 'account' ('ACN_ID')  "
 					+ ") ;"
 					);
-
+			
+			db.execSQL("CREATE TABLE 'r_acn_grp' ("
+					+ "'ACN_ID' varchar(50) NOT NULL,"
+					+ "'GRP_ID' varchar(50) NOT NULL,"
+					+ "'ACNGRP_CREATION_DATE' datetime,"
+					+ "'ACNGRP_CONFIRMED' tinyint(1),"
+					+ "'FLG_NEED_SYNC' tinyint(1),"
+					+ "'LAST_UPDATE' datetime,"
+					+ "'FLG_SHOWED' tinyint(1),"
+					+ "'FLG_DELETED' tinyint(1),"
+					+ "PRIMARY KEY ('ACN_ID','GRP_ID')"
+					+ ") ;"
+					);
+					
 			
 			/*
 
@@ -205,7 +221,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	//***************************************************
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.d(getClass().getSimpleName(), "CAMBIO versione");
+		databaseRegenerated = true;
+		deleteTables();
+		onCreate(db);
+		
 	}
 
 	
@@ -216,6 +235,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	// #################################################################################
 	// #################################################################################
 
+	//***************************************************
+	public void deleteTables(){
+		SQLiteDatabase db = null;
+
+		try{
+			db = getReadableDatabase();
+			
+			db.beginTransaction();
+			
+			for(int i = 0; i < tables.length; i++){
+				db.execSQL("drop table " + tables[i]);
+			}
+			
+			//db.execSQL("delete from event");
+			//db.execSQL("delete from groups");
+			
+			db.setTransactionSuccessful();
+
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		} finally {
+			if(db != null){
+				db.endTransaction();
+			}
+		}
+	}
+	
+	
 
 	//***************************************************
 	public void resetDatabase(){
@@ -226,9 +273,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 			
 			db.beginTransaction();
 			
-			db.execSQL("delete from event");
-
-			db.execSQL("delete from groups");
+			for(int i = 0; i < tables.length; i++){
+				db.execSQL("delete from " + tables[i]);
+			}
+			
+			//db.execSQL("delete from event");
+			//db.execSQL("delete from groups");
 			
 			db.setTransactionSuccessful();
 
@@ -579,5 +629,163 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	//################# END GROUP ################################
 	
+	//################# R_ACN_GRP ################################
+	
+	//***************************************************
+	public void updateRAcnGrp(List<RAcnGrp> rAcnGrps){
+		SQLiteDatabase db = null;
+
+		try{
+			db = getReadableDatabase();
+			db.beginTransaction();
+			
+			RAcnGrp currentRecord;
+			for(int i = 0; i < rAcnGrps.size(); i++){
+				currentRecord = rAcnGrps.get(i);
+				String[] args = {
+						currentRecord.getId().getAcnId(),
+						currentRecord.getId().getGrpId(),
+						ServicesUtils.dateFormatter.format(currentRecord.getAcngrpCreationDate()),
+						ServicesUtils.extractToStringSave(currentRecord.getAcngrpConfirmed()),
+						"false",
+						ServicesUtils.dateFormatter.format(currentRecord.getLastUpdate()),
+						"false",
+						ServicesUtils.extractToStringSave(currentRecord.getFlgDeleted())
+						};
+				
+				db.execSQL("INSERT OR REPLACE INTO 'r_acn_grp' VALUES "
+						+ "(?,?,?,?,?,?,?,?)", args
+						);
+			}//for i
+			
+			db.setTransactionSuccessful();
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		} finally {
+			if(db != null){
+				db.endTransaction();
+			}
+		}
+
+	}
+	
+	//***************************************************
+	public List<RAcnGrp> getRAcnGrps(String groupId){
+		List<RAcnGrp> result = new ArrayList<RAcnGrp>();
+		Cursor c = null;
+		
+		try{
+			String[] args = {groupId};
+			String baseQuesry = "SELECT * FROM r_acn_grp r where r.GRP_ID = ? order by ACNGRP_CREATION_DATE";
+
+			c = getReadableDatabase().rawQuery(baseQuesry, args);
+			c.moveToFirst();
+			
+			if ( !c.isAfterLast() ) {
+				RAcnGrp rAcnGrp;
+				do{
+					rAcnGrp = new RAcnGrp();
+					
+					initRAcnGrp(c, rAcnGrp);
+					
+					result.add(rAcnGrp);
+					
+					c.moveToNext();
+				}while(!c.isAfterLast());
+			}
+
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		} finally {
+			if(c != null){
+				c.close();
+			}
+		}
+		
+		ThreadUtilities.sleep(3000);
+
+		return result;
+	}
+
+
+	
+	//***************************************************
+	public String getLastUpdateForRAcnGrp(){
+		String result = null;
+
+		Cursor c = null;
+
+		try{
+			String[] args = {};
+			c = getReadableDatabase().rawQuery("select max(LAST_UPDATE) as LAST_UPDATE from r_acn_grp", args);
+			c.moveToFirst();
+			
+			if ( !c.isAfterLast() ) {
+				result = c.getString(0);
+			}
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		} finally {
+			if(c != null){
+				c.close();
+			}
+		}
+		
+		return result;
+	}
+	
+	
+	//***************************************************
+	private void initRAcnGrp(Cursor c, RAcnGrp currRAcnGrp){
+		currRAcnGrp.setAcngrpCreationDate(new Date(c.getLong(c.getColumnIndex("ACNGRP_CREATION_DATE") ) ) );
+		currRAcnGrp.setId(new RAcnGrpId(c.getString(c.getColumnIndex("ACN_ID") ), c.getString(c.getColumnIndex("GRP_ID") )));
+
+	}
+	//################# END R_ACN_GRP ################################
+
+	//################# ACCOUNT ################################
+	
+	public List<Account> getAccountsByGroupId(String groupId){
+		List<Account> result = new ArrayList<Account>();
+		Cursor c = null;
+		
+		try{
+			String[] args = {groupId};
+			String baseQuesry = "select * from r_acn_grp r where r.GRP_ID = ? order by r.ACNGRP_CREATION_DATE";
+
+			c = getReadableDatabase().rawQuery(baseQuesry, args);
+			c.moveToFirst();
+			
+			if ( !c.isAfterLast() ) {
+				Account account;
+				do{
+					account = new Account();
+					
+					initAccount(c, account);
+					
+					result.add(account);
+					
+					c.moveToNext();
+				}while(!c.isAfterLast());
+			}
+
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		} finally {
+			if(c != null){
+				c.close();
+			}
+		}
+		
+		ThreadUtilities.sleep(3000);
+
+		return result;
+	}
+	
+	//***************************************************
+	private void initAccount(Cursor c, Account account){
+		account.setAcnId(c.getString(c.getColumnIndex("ACN_ID") ));
+	}
+	//################# END ACCOUNT ################################
 	
 }//main class

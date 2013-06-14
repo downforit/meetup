@@ -215,7 +215,7 @@ public class EventNewFragment extends SherlockFragment {
 			
 			if(this.exception != null){
 				if(this.exception instanceof C_NetworkKeyDuplicateException){
-					Toast.makeText(getActivity(), R.string.eventNameAlreadyUsed, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.eventNameArleadyUsed, Toast.LENGTH_LONG).show();
 				} else {
 					ExceptionsUtils.standardManagingException(this.exception, getActivity());
 				}

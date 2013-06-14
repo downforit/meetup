@@ -151,7 +151,7 @@ public class GroupNewFragment extends SherlockFragment {
 			
 			if(this.exception != null){
 				if(this.exception instanceof C_NetworkKeyDuplicateException){
-					Toast.makeText(getActivity(), R.string.groupNameAlreadyUsed, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.groupNameArleadyUsed, Toast.LENGTH_LONG).show();
 				} else {
 					ExceptionsUtils.standardManagingException(this.exception, getActivity());
 				}

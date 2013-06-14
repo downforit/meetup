@@ -178,7 +178,7 @@ public class LoginNewFragment extends SherlockFragment implements View.OnClickLi
 		public void onPostExecute(Void arg0) {
 			if(this.exception != null){
 				if(this.exception instanceof C_NetworkKeyDuplicateException){
-					Toast.makeText(getActivity(), R.string.usernameAlreadyUsed, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.usernameArleadyUsed, Toast.LENGTH_LONG).show();
 				} else {
 					ExceptionsUtils.standardManagingException(this.exception, getActivity());
 				}

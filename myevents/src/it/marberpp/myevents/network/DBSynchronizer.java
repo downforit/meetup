@@ -6,6 +6,7 @@ import java.util.List;
 
 import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
+import mymeeting.hibernate.pojo.RAcnGrp;
 import android.content.Context;
 import android.util.Log;
 
@@ -15,6 +16,7 @@ public class DBSynchronizer {
 	public static void syncDb(Context ctxt, String username){
 		syncEvents(ctxt, username);
 		syncGroups(ctxt, username);
+		syncRAcnGrp(ctxt, username);
 	}
 	
 	
@@ -53,6 +55,25 @@ public class DBSynchronizer {
 		DatabaseHelper.getInstance(ctxt).updateGroups(groupsToUpdate);
 		
 		Log.d(DBSynchronizer.class.getSimpleName(), "Fine sincronizzazione gruppi");
+	}
+	
+
+	//***************************************************
+	public static void syncRAcnGrp(Context ctxt, String username){
+		
+		String lastUpdate = DatabaseHelper.getInstance(ctxt).getLastUpdateForRAcnGrp();
+
+		List<RAcnGrp> rAcnGrpsToUpdate = NetworkHelper.getRAcnGrpsToSync(username, lastUpdate);
+
+		if(rAcnGrpsToUpdate == null || rAcnGrpsToUpdate.size() == 0){
+			return;
+		}
+		
+		//Log.d(DBSynchronizer.class.getSimpleName(), "LastUpdate del primo evento " + eventsToUpdate.get(0).getLastUpdate().toString());
+		
+		DatabaseHelper.getInstance(ctxt).updateRAcnGrp(rAcnGrpsToUpdate);
+		
+		Log.d(DBSynchronizer.class.getSimpleName(), "Fine sincronizzazione RAcnGrp");
 	}
 	
 	

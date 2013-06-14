@@ -31,6 +31,7 @@
         <activity android:name=".groups.GroupActivity"></activity>
         <activity android:name=".groups.GroupNewActivity"></activity>
         <activity android:name=".groups.GroupSelectActivity"></activity>
+        <activity android:name=".accounts.AccountSelectActivity"></activity>
         </application>
 
 </manifest>

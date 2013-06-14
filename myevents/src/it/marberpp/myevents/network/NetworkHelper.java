@@ -17,13 +17,18 @@ import mymeeting.exceptions.C_NetworkKeyDuplicateException;
 import mymeeting.exceptions.C_NetworkLoginException;
 import mymeeting.exceptions.C_NetworkResponseException;
 import mymeeting.exceptions.C_UnexpectedException;
+import mymeeting.hibernate.pojo.Account;
 import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
+import mymeeting.hibernate.pojo.RAcnGrp;
 import mymeeting.services.responses.GenericResponse;
+import mymeeting.services.responses.ResponseAccountsList;
 import mymeeting.services.responses.ResponseEvent;
 import mymeeting.services.responses.ResponseEventsList;
 import mymeeting.services.responses.ResponseGroup;
 import mymeeting.services.responses.ResponseGroupsList;
+import mymeeting.services.responses.ResponseRAcnGrp;
+import mymeeting.services.responses.ResponseRAcnGrpsList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -130,6 +135,83 @@ public class NetworkHelper {
 		}
 		
 		return;
+	}
+	
+	
+	//*********************************************
+	public static List<Account> serachAccounts(String username){
+		ResponseAccountsList response = null;
+		String url;
+		try{
+			url = "http://" + ServicesUtils.DNS_SERVER + ":" + ServicesUtils.IP_PORT_NUMBER + ServicesUtils.HTTP_SERVICE_URI + "?" 
+						 + ServicesUtils.HTTP_PARAM_OPERATION + "=" + ServicesUtils.HTTP_OP_SEARCH_ACCOUNT
+						 + "&" + ServicesUtils.HTTP_PARAM_USERNAME + "="
+		                 + URLEncoder.encode(username, "ISO-8859-1");
+		}catch (Exception e) {
+			throw new C_UnexpectedException("error during construction of url", e);
+		}
+		
+
+		try {
+			String jsonResponse = callServer(url);
+			
+			Type listType = new TypeToken<ResponseAccountsList>(){}.getType();
+			  
+			Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
+			response = gsonConverter.fromJson(jsonResponse, listType);
+			
+			if( !response.isServiceSuccessed() ){
+				throw new C_NetworkResponseException(response.getDescription());
+			}
+			
+		} catch (IOException e) {
+			throw new C_NetworkComunicationException(e);
+		}
+		
+		
+		return response.getAccounts();
+	}
+
+	
+		
+	//*********************************************
+	public static RAcnGrp addAccountToGroup(String username, String groupId){
+		ResponseRAcnGrp response = null;
+		String url;
+		try{
+			url = "http://" + ServicesUtils.DNS_SERVER + ":" + ServicesUtils.IP_PORT_NUMBER + ServicesUtils.HTTP_SERVICE_URI + "?" 
+						 + ServicesUtils.HTTP_PARAM_OPERATION + "=" + ServicesUtils.HTTP_OP_ADD_ACCOUNT_TO_GROUP
+						 + "&" + ServicesUtils.HTTP_PARAM_USERNAME + "="
+		                 + URLEncoder.encode(username, "ISO-8859-1")
+		                 + "&" + ServicesUtils.HTTP_PARAM_GROUP_ID + "="
+		                 + URLEncoder.encode(groupId, "ISO-8859-1");
+		}catch (Exception e) {
+			throw new C_UnexpectedException("error during construction of url", e);
+		}
+		
+
+		try {
+			String jsonResponse = callServer(url);
+			
+			Type listType = new TypeToken<ResponseRAcnGrp>(){}.getType();
+			  
+			Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
+			response = gsonConverter.fromJson(jsonResponse, listType);
+			
+			if( !response.isServiceSuccessed() ){
+				if(response.getErrorCode() == ServicesUtils.DB_ERROR_KEY_VIOLATION) {
+					throw new C_NetworkKeyDuplicateException(response.getDescription());
+				} else {
+					throw new C_NetworkResponseException(response.getDescription());
+				}
+			}
+			
+		} catch (IOException e) {
+			throw new C_NetworkComunicationException(e);
+		}
+		
+		
+		return response.getrAcnGrp();
 	}
 	
 	
@@ -323,6 +405,48 @@ public class NetworkHelper {
 
 	
 	//*********************************************
+	public static List<RAcnGrp> getRAcnGrpsToSync(String username, String lastUpdate){
+		String url;
+		ResponseRAcnGrpsList responseRAcnGrps = null;
+		
+		try{
+			url = "http://" + ServicesUtils.DNS_SERVER + ":" + ServicesUtils.IP_PORT_NUMBER + ServicesUtils.HTTP_SERVICE_URI + "?" 
+						 + ServicesUtils.HTTP_PARAM_OPERATION + "=" + ServicesUtils.HTTP_OP_SYNC_R_ACN_GRP
+						 + "&" + ServicesUtils.HTTP_PARAM_USERNAME + "="
+		                 + URLEncoder.encode(username, "ISO-8859-1");
+			if(lastUpdate != null && lastUpdate.length() > 0){
+						 url += "&" + ServicesUtils.HTTP_PARAM_LAST_UPDATE + "="
+		                 + URLEncoder.encode(lastUpdate, "ISO-8859-1") ;
+			} else {
+						 url += "&" + ServicesUtils.HTTP_PARAM_LAST_UPDATE + "=";
+			}
+		                 
+		}catch (Throwable e) {
+			throw new C_UnexpectedException("error during construction of url", e);
+		}
+		
+
+		try {
+			String jsonResponse = NetworkHelper.callServer(url);
+
+			
+			Type listType = new TypeToken<ResponseRAcnGrpsList>(){}.getType();
+			Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
+			responseRAcnGrps = gsonConverter.fromJson(jsonResponse, listType);			
+			
+			if(responseRAcnGrps.getErrorCode() < 0){
+				throw new C_NetworkResponseException(responseRAcnGrps.getErrorCode() + ": " + responseRAcnGrps.getDescription());
+			}
+			
+		} catch (Throwable e) {
+			throw new C_NetworkComunicationException(e);
+		}
+		
+		return responseRAcnGrps.getrAcnGrp();
+	}
+	
+	
+	//*********************************************
 	//*********************************************
 	//*********************************************
 	public static String callServer(String path) throws IOException {
@@ -387,4 +511,8 @@ public class NetworkHelper {
 	}
 
 
+	
+	
+	
+	
 }//class

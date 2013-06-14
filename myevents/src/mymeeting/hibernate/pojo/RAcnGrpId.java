@@ -1,4 +1,9 @@
 package mymeeting.hibernate.pojo;
+// Generated 7-giu-2013 0.23.19 by Hibernate Tools 3.2.1.GA
+
+import com.google.gson.annotations.Expose;
+
+
 
 
 /**
@@ -6,8 +11,9 @@ package mymeeting.hibernate.pojo;
  */
 public class RAcnGrpId  implements java.io.Serializable {
 
-
+    @Expose
      private String acnId;
+    @Expose
      private String grpId;
 
     public RAcnGrpId() {
@@ -51,6 +57,7 @@ public class RAcnGrpId  implements java.io.Serializable {
          result = 37 * result + ( getGrpId() == null ? 0 : this.getGrpId().hashCode() );
          return result;
    }   
+
 
 }
 
