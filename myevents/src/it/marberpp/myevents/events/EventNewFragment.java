@@ -12,6 +12,7 @@ import it.marberpp.myevents.utils.ThreadUtilities;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +44,7 @@ public class EventNewFragment extends SherlockFragment {
 	
 	EditText txtEventName;
 	EditText txtGroup;
-	DatePicker DatePicker;
+	DatePicker datePicker;
 	EditText txtDescription;
 	
 	
@@ -83,9 +85,11 @@ public class EventNewFragment extends SherlockFragment {
 		
 		
 		
-		this.DatePicker = (DatePicker) result.findViewById(R.id.datePicker);
+		this.datePicker = (DatePicker) result.findViewById(R.id.datePicker);
 
-		this.DatePicker.setCalendarViewShown(false);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			this.datePicker.setCalendarViewShown(false);
+		}
 
 		if(getArguments() != null){
 			this.username = getArguments().getString(MainLib.PARAM_USERNAME);
@@ -162,10 +166,11 @@ public class EventNewFragment extends SherlockFragment {
 		group.setGrpId(this.txtGroup.getText().toString());
 		event.setGroup(group);
 		
-		this.DatePicker.setCalendarViewShown(false);
+		//this.DatePicker.setCalendarViewShown(false);
 		
-		event.setEvnDate(new Date(this.DatePicker.getCalendarView().getDate()));
-		
+		//event.setEvnDate(new Date(this.datePicker.getCalendarView().getDate()));
+		event.setEvnDate( getDateFromDatePicket(this.datePicker) );
+			
 		ProgressDialog dialog = ProgressDialog.show(getActivity(), "Saving", "Please wait...", true);
 		
 		NewEventTask newEventTask = new NewEventTask(event, this.username, dialog);
@@ -228,5 +233,16 @@ public class EventNewFragment extends SherlockFragment {
 
 
 
+	public static Date getDateFromDatePicket(DatePicker datePicker){
+	    int day = datePicker.getDayOfMonth();
+	    int month = datePicker.getMonth();
+	    int year =  datePicker.getYear();
+
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.set(year, month, day);
+
+	    return calendar.getTime();
+	}	
+	
 	
 }

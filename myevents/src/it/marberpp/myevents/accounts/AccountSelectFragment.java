@@ -2,9 +2,6 @@ package it.marberpp.myevents.accounts;
 
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
-import it.marberpp.myevents.events.EventActivity;
-import it.marberpp.myevents.events.EventsListFragment;
-import it.marberpp.myevents.groups.GroupsListFragment;
 import it.marberpp.myevents.hibernate.DatabaseHelper;
 import it.marberpp.myevents.network.NetworkHelper;
 import it.marberpp.myevents.utils.ExceptionsUtils;
@@ -17,18 +14,14 @@ import java.util.List;
 import mymeeting.exceptions.C_NetworkKeyDuplicateException;
 import mymeeting.exceptions.C_RuntimeException;
 import mymeeting.hibernate.pojo.Account;
-import mymeeting.hibernate.pojo.Event;
-import mymeeting.hibernate.pojo.Group;
 import mymeeting.hibernate.pojo.RAcnGrp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -40,7 +33,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 
 public class AccountSelectFragment extends SherlockListFragment {
@@ -49,6 +41,7 @@ public class AccountSelectFragment extends SherlockListFragment {
 
 	String groupId;
 
+	AccountRowAdapter accountsAdapter;
 	List<Account> accounts;
 	Account currentAccount;
 	//String username;
@@ -80,6 +73,8 @@ public class AccountSelectFragment extends SherlockListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		this.setRetainInstance(true);
+		
 		View result = inflater.inflate(R.layout.account_select_fragment, parent, false);
 
 		groupId = getArguments().getString(MainLib.PARAM_GROUP_ID);
@@ -103,6 +98,12 @@ public class AccountSelectFragment extends SherlockListFragment {
 				ThreadUtilities.executeAsyncTask(searchTask, getActivity().getApplicationContext());
 			}
 		});
+		
+		
+		if(this.accountsAdapter != null){
+			this.listAccounts.setAdapter(this.accountsAdapter);
+		}
+		
 		/*
 		if(getArguments() != null){
 			this.username = getArguments().getString(MainLib.PARAM_USERNAME);
@@ -129,7 +130,7 @@ public class AccountSelectFragment extends SherlockListFragment {
 	//***************************************************
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		currentAccount = this.accounts.get(position);
+		currentAccount = this.accountsAdapter.getItem(position);
 
         new AlertDialog.Builder(getActivity())
         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -156,7 +157,8 @@ public class AccountSelectFragment extends SherlockListFragment {
 		
 		this.accounts = accounts;
 		
-		this.listAccounts.setAdapter(new AccountRowAdapter());
+		this.accountsAdapter = new AccountRowAdapter();
+		this.listAccounts.setAdapter(this.accountsAdapter);
 	}
 	
 	
@@ -286,24 +288,41 @@ public class AccountSelectFragment extends SherlockListFragment {
 	//###################################################
 	class AccountRowAdapter extends ArrayAdapter<Account> {
 		AccountRowAdapter() {
-			super(AccountSelectFragment.this.getActivity(), R.layout.accounts_list_row,R.id.txtAccount, AccountSelectFragment.this.accounts);
+			super(AccountSelectFragment.this.getActivity(),R.id.txtAccount, AccountSelectFragment.this.accounts);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = super.getView(position, convertView, parent);
-
-			Account currentAccount = accounts.get(position);
+			AccountRowWrapper wrapper;
 			
-			TextView txtAccount = (TextView) row.findViewById(R.id.txtAccount);
-			txtAccount.setText(currentAccount.getAcnId());
+			if(convertView == null){
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.accounts_list_row, null);
+				wrapper = new AccountRowWrapper(convertView);
+				convertView.setTag(wrapper);
+			} else {
+				wrapper = (AccountRowWrapper)convertView.getTag();
+			}
 
-			//TextView txtDescr = (TextView) row.findViewById(R.id.txtEventDescr);
-			//txtDescr.setText(currentEvent.getEvnDescription());
-			
-			return (row);
+			wrapper.populate(getItem(position));
+						
+			return convertView;
+
 		}
 	}//class
 
+	
+	//###################################################
+	private static class AccountRowWrapper {
+		private TextView txtAccount;
+		
+		public AccountRowWrapper(View v) {
+			txtAccount = (TextView) v.findViewById(R.id.txtAccount);
+		}
+		
+		public void populate(Account account) {
+			txtAccount.setText(account.getAcnId());
+		}
+	}
+	
 
 }

@@ -8,6 +8,8 @@ import it.marberpp.myevents.groups.GroupsListFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ListFragment;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
@@ -36,7 +38,6 @@ public class ListsVPAdapter extends FragmentStatePagerAdapter {
 	//***************************************************
 	@Override
 	public Fragment getItem(int position) {
-		
 		ListFragment result;
 		if(position == ID_EVENTS_LIST_FUTURES || position == ID_EVENTS_LIST_PAST){
 			result = EventsListFragment.newInstance(position);
@@ -49,6 +50,13 @@ public class ListsVPAdapter extends FragmentStatePagerAdapter {
 		return result;
 	}
 
+
+	//***************************************************
+	@Override
+	public void destroyItem(ViewGroup container, int position, Object object) {
+		super.destroyItem(container, position, object);
+		this.dataRetain.removeListFragment(null, position);
+	}
 
 	//***************************************************
 	@Override
@@ -73,4 +81,5 @@ public class ListsVPAdapter extends FragmentStatePagerAdapter {
 		
 		return "";
 	}
+
 }

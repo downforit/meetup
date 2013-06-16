@@ -6,6 +6,7 @@ import it.marberpp.myevents.utils.GenericFragmentInterface;
 
 import java.util.List;
 
+import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class GroupsListFragment extends ListFragment {
 	int pageId = -1;
 
 	View vProgressBar = null;
+	GroupRowAdapter GroupsAdapter;
 	ListView groupsListView = null;
 	
 	private GenericFragmentInterface genericListener = null;
@@ -95,7 +97,7 @@ public class GroupsListFragment extends ListFragment {
 	//***************************************************
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		Group currentGroup = this.groups.get(position);
+		Group currentGroup = this.GroupsAdapter.getItem(position);
 		
 		if(this.pageId == PAGE_ID_SELECTION_MODE){
 			Log.d(getClass().getSimpleName(), " groupId = " + currentGroup.getGrpId());
@@ -145,9 +147,10 @@ public class GroupsListFragment extends ListFragment {
 		}
 
 		if(this.groups != null){
+			this.GroupsAdapter = new GroupRowAdapter();
 			this.vProgressBar.setVisibility(View.GONE);
 			this.groupsListView.setVisibility(View.VISIBLE);
-			this.groupsListView.setAdapter(new GroupRowAdapter());
+			this.groupsListView.setAdapter(this.GroupsAdapter);
 		} else {
 			this.vProgressBar.setVisibility(View.VISIBLE);
 			this.groupsListView.setVisibility(View.GONE);
@@ -168,25 +171,43 @@ public class GroupsListFragment extends ListFragment {
 	//###################################################
 	class GroupRowAdapter extends ArrayAdapter<Group> {
 		GroupRowAdapter() {
-			super(GroupsListFragment.this.getActivity(), R.layout.groups_list_row,R.id.txtGroup, GroupsListFragment.this.groups);
+			super(GroupsListFragment.this.getActivity(), R.id.txtGroup, GroupsListFragment.this.groups);
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = super.getView(position, convertView, parent);
-
-			Group currentGroup = GroupsListFragment.this.groups.get(position);
+			GroupRowWrapper wrapper;
 			
-			TextView txtGroup = (TextView) row.findViewById(R.id.txtGroup);
-			txtGroup.setText(currentGroup.getGrpId());
+			if(convertView == null){
+				convertView = getActivity().getLayoutInflater().inflate(R.layout.groups_list_row, null);
+				wrapper = new GroupRowWrapper(convertView);
+				convertView.setTag(wrapper);
+			} else {
+				wrapper = (GroupRowWrapper)convertView.getTag();
+			}
 
-			TextView txtDescr = (TextView) row.findViewById(R.id.txtGroupDescr);
-			txtDescr.setText(currentGroup.getGrpDescription());
+			wrapper.populate(getItem(position));
 						
-			return (row);
+			return convertView;
 		}
 	}//class
 	
+
+	//###################################################
+	private static class GroupRowWrapper {
+		private TextView txtGroup;
+		private TextView txtDescr;
+		
+		public GroupRowWrapper(View v) {
+			txtGroup = (TextView) v.findViewById(R.id.txtGroup);
+			txtDescr = (TextView) v.findViewById(R.id.txtGroupDescr);
+		}
+		
+		public void populate(Group group) {
+			txtGroup.setText(group.getGrpId());
+			txtDescr.setText(group.getGrpDescription());
+		}
+	}
 	
 
 }//class

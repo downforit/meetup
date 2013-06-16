@@ -182,7 +182,6 @@ public class MainActivity extends SherlockFragmentActivity {
 				this.logged = true;
 
 				if( oldUsername == null || !oldUsername.equals(this.username) ){
-					Log.d(getClass().getSimpleName(), "##### RESET DATABASE");
 					DatabaseHelper.getInstance(MainActivity.this).resetDatabase();
 				}
 				this.synchronizeDatabase();

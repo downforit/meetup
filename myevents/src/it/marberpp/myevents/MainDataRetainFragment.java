@@ -289,6 +289,10 @@ public class MainDataRetainFragment extends SherlockFragment {
 		return this.elfList.get(position);
 	}
 	
+	//*********************************************
+	public synchronized void removeListFragment(ListFragment fragment, int position){
+		this.elfList.remove(position);
+	}
 	
 	
 	//*********************************************
@@ -351,7 +355,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 		public LoadEventsTask(int dataType, String username){
 			this.dataType = dataType;
 			this.username = username;
-			Log.e(getClass().getSimpleName(), ">>>>>>>>> thread type = " + this.dataType);
+			//Log.e(getClass().getSimpleName(), ">>>>>>>>> thread type = " + this.dataType);
 		}
 		
 		@Override
@@ -387,7 +391,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 					return;
 				}
 				
-				Log.e(getClass().getSimpleName(), "<<<<<<< thread type = " + this.dataType);
+				//Log.e(getClass().getSimpleName(), "<<<<<<< thread type = " + this.dataType);
 
 				switch(dataType){
 				case DATA_TYPE_FUTURE_EVENTS:

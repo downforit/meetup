@@ -92,6 +92,16 @@ public class EventsListFragment extends ListFragment {
 	
 	//***************************************************
 	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+	}	
+	
+
+	
+	
+	//***************************************************
+	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Event currentEvent = eventsAdapter.getItem(position);
 		
@@ -120,7 +130,9 @@ public class EventsListFragment extends ListFragment {
 		}
 
 		if(this.events != null){
-			eventsAdapter = new EventRowAdapter(events);
+			if(eventsAdapter == null){
+				eventsAdapter = new EventRowAdapter(events);
+			}
 			this.vProgressBar.setVisibility(View.GONE);
 			this.eventsListView.setVisibility(View.VISIBLE);
 			this.eventsListView.setAdapter(eventsAdapter);
@@ -154,11 +166,12 @@ public class EventsListFragment extends ListFragment {
 			} else {
 				eventWrapper = (EventWrapper) convertView.getTag();
 			}
-			eventWrapper.populateEvent(getItem(position));
+			eventWrapper.populate(getItem(position));
 			return convertView;
 		}
 	}//class
 	
+	//###################################################
 	private static class EventWrapper {
 		private TextView txtEvent;
 		private TextView txtDescr;
@@ -168,10 +181,12 @@ public class EventsListFragment extends ListFragment {
 			txtDescr = (TextView) v.findViewById(R.id.txtEventDescr);
 		}
 		
-		public void populateEvent(Event event) {
+		public void populate(Event event) {
 			txtEvent.setText(event.getEvnId());
 			txtDescr.setText(event.getEvnDescription());
 		}
 	}
+
+
 
 }//class
