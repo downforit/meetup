@@ -1,15 +1,12 @@
 package it.marberpp.myevents;
 
 //import android.R;
-import it.marberpp.myevents.R;
 import it.marberpp.myevents.events.EventsListFragment;
 import it.marberpp.myevents.groups.GroupsListFragment;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ListFragment;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 

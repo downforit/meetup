@@ -743,6 +743,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	//################# END R_ACN_GRP ################################
 
+	
+	//################# ACCOUNT ################################
+	
+	public Cursor getCursorAccountsByGroupId(String groupId){
+		Cursor c = null;
+		
+		try{
+			String[] args = {groupId};
+			String baseQuesry = "select * from r_acn_grp r where r.GRP_ID = ? order by r.ACNGRP_CREATION_DATE";
+	
+			c = getReadableDatabase().rawQuery(baseQuesry, args);
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		}
+		
+		return c;
+	}
+	
 	//################# ACCOUNT ################################
 	
 	public List<Account> getAccountsByGroupId(String groupId){
@@ -750,10 +768,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Cursor c = null;
 		
 		try{
-			String[] args = {groupId};
-			String baseQuesry = "select * from r_acn_grp r where r.GRP_ID = ? order by r.ACNGRP_CREATION_DATE";
-
-			c = getReadableDatabase().rawQuery(baseQuesry, args);
+//			String[] args = {groupId};
+//			String baseQuesry = "select * from r_acn_grp r where r.GRP_ID = ? order by r.ACNGRP_CREATION_DATE";
+//
+//			c = getReadableDatabase().rawQuery(baseQuesry, args);
+			c = getCursorAccountsByGroupId(groupId);
 			c.moveToFirst();
 			
 			if ( !c.isAfterLast() ) {

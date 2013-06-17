@@ -7,6 +7,7 @@ import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.ThreadUtilities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import mymeeting.hibernate.pojo.Event;
@@ -17,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -25,10 +25,10 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class MainDataRetainFragment extends SherlockFragment {
 	//private static final int DATA_TYPE_PREFS = 0;
-	private static final int DATA_TYPE_FUTURE_EVENTS = 1;
-	private static final int DATA_TYPE_PAST_EVENTS = 2;
-	private static final int DATA_TYPE_OWNED_GROUPS = 3;
-	private static final int DATA_TYPE_OTHER_GROUPS = 4;
+	//private static final int DATA_TYPE_FUTURE_EVENTS = 1;
+	//private static final int DATA_TYPE_PAST_EVENTS = 2;
+	//private static final int DATA_TYPE_OWNED_GROUPS = 3;
+	//private static final int DATA_TYPE_OTHER_GROUPS = 4;
 	
 	
 	public static MainDataRetainFragment staticInstance = null;
@@ -112,7 +112,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 				if(futureEvents == null && this.loadFutureEventsTask == null){
 					this.futureEventsDelivered = false;
 					
-					this.loadFutureEventsTask = new LoadEventsTask(DATA_TYPE_FUTURE_EVENTS, this.username);
+					this.loadFutureEventsTask = new LoadEventsTask(ListsVPAdapter.ID_EVENTS_LIST_FUTURES, this.username);
 					ThreadUtilities.executeAsyncTask(this.loadFutureEventsTask, getActivity().getApplicationContext());
 					return;
 				}
@@ -127,7 +127,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 				if(pastEvents == null && this.loadPastEventsTask == null){
 					this.pastEventsDelivered = false;
 					
-					this.loadPastEventsTask = new LoadEventsTask(DATA_TYPE_PAST_EVENTS, this.username);
+					this.loadPastEventsTask = new LoadEventsTask(ListsVPAdapter.ID_EVENTS_LIST_PAST, this.username);
 					ThreadUtilities.executeAsyncTask(this.loadPastEventsTask, getActivity().getApplicationContext());
 					return;
 				}
@@ -144,7 +144,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 					if(ownedGroups == null && this.loadOwnedGroupsTask == null){
 						this.ownedGroupsDelivered = false;
 						
-						this.loadOwnedGroupsTask = new LoadEventsTask(DATA_TYPE_OWNED_GROUPS, this.username);
+						this.loadOwnedGroupsTask = new LoadEventsTask(ListsVPAdapter.ID_GROUPS_LIST_OWNED, this.username);
 						ThreadUtilities.executeAsyncTask(this.loadOwnedGroupsTask, getActivity().getApplicationContext());
 						return;
 					}
@@ -160,7 +160,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 					if(otherGroups == null && this.loadOtherGroupsTask == null){
 						this.otherGroupsDelivered = false;
 						
-						this.loadOtherGroupsTask = new LoadEventsTask(DATA_TYPE_OTHER_GROUPS, this.username);
+						this.loadOtherGroupsTask = new LoadEventsTask(ListsVPAdapter.ID_GROUPS_LIST_OTHER, this.username);
 						ThreadUtilities.executeAsyncTask(this.loadOtherGroupsTask, getActivity().getApplicationContext());
 						return;
 					}
@@ -230,10 +230,12 @@ public class MainDataRetainFragment extends SherlockFragment {
 		
 		this.synchronizerRunning = true;
 		for(int i = 0; i < elfList.size(); i++){
-			if(i == ListsVPAdapter.ID_EVENTS_LIST_FUTURES || i == ListsVPAdapter.ID_EVENTS_LIST_PAST){
-				((EventsListFragment)this.elfList.get(i)).setEvents(null);
-			} else {
-				((GroupsListFragment)this.elfList.get(i)).setGroups(null);
+			if(this.elfList.get(i) != null){
+				if(i == ListsVPAdapter.ID_EVENTS_LIST_FUTURES || i == ListsVPAdapter.ID_EVENTS_LIST_PAST){
+					((EventsListFragment)this.elfList.get(i)).setEvents(null);
+				} else {
+					((GroupsListFragment)this.elfList.get(i)).setGroups(null);
+				}
 			}
 		}//for i
 		
@@ -293,7 +295,7 @@ public class MainDataRetainFragment extends SherlockFragment {
 	public synchronized void removeListFragment(ListFragment fragment, int position){
 		this.elfList.remove(position);
 	}
-	
+
 	
 	//*********************************************
 	public List<Group> getAllGroups(){
@@ -337,7 +339,37 @@ public class MainDataRetainFragment extends SherlockFragment {
 
 		this.loadAndDeliveryData();
 	}
+
 	
+	//*********************************************
+	public void addEvent(Event event){
+		Date now = new Date(System.currentTimeMillis());
+		if(event.getEvnDate().before(now)){
+			this.pastEvents.add(event);
+			((EventsListFragment)this.elfList.get(ListsVPAdapter.ID_EVENTS_LIST_PAST)).addEvent(event);
+		} else {
+			this.futureEvents.add(event);
+			((EventsListFragment)this.elfList.get(ListsVPAdapter.ID_EVENTS_LIST_FUTURES)).addEvent(event);
+		}
+	}
+	
+	
+	//*********************************************
+	public void addOwnedGroup(Group group){
+		this.ownedGroups.add(group);
+		GroupsListFragment listFragment = (GroupsListFragment)this.elfList.get(ListsVPAdapter.ID_GROUPS_LIST_OWNED);
+		if(listFragment != null){
+			listFragment.addGroupToGroupAdapter(group);
+		}
+	}
+	
+	
+	//*********************************************
+	public void reloadOwnedGroupsSynchronous(){
+		this.ownedGroups = DatabaseHelper.getInstance(getActivity()).getGroups(this.username, true);
+		this.ownedGroupsDelivered = false;
+		this.loadAndDeliveryData();
+	}
 	
 
 	//#####################################################################
@@ -362,16 +394,16 @@ public class MainDataRetainFragment extends SherlockFragment {
 		protected Void doInBackground(Context... ctxt) {
 			try {
 				switch(dataType){
-				case DATA_TYPE_FUTURE_EVENTS:
+				case ListsVPAdapter.ID_EVENTS_LIST_FUTURES:
 					this.eventsTmp = DatabaseHelper.getInstance(getActivity()).getFutureEvents();
 					break;
-				case DATA_TYPE_PAST_EVENTS:
+				case ListsVPAdapter.ID_EVENTS_LIST_PAST:
 					this.eventsTmp = DatabaseHelper.getInstance(getActivity()).getPastEvents();
 					break;
-				case DATA_TYPE_OWNED_GROUPS:
+				case ListsVPAdapter.ID_GROUPS_LIST_OWNED:
 					this.groupTmp = DatabaseHelper.getInstance(getActivity()).getGroups(this.username, true);
 					break;
-				case DATA_TYPE_OTHER_GROUPS:
+				case ListsVPAdapter.ID_GROUPS_LIST_OTHER:
 					this.groupTmp = DatabaseHelper.getInstance(getActivity()).getGroups(this.username, false);
 					break;
 				}//switch
@@ -394,16 +426,16 @@ public class MainDataRetainFragment extends SherlockFragment {
 				//Log.e(getClass().getSimpleName(), "<<<<<<< thread type = " + this.dataType);
 
 				switch(dataType){
-				case DATA_TYPE_FUTURE_EVENTS:
+				case ListsVPAdapter.ID_EVENTS_LIST_FUTURES:
 					MainDataRetainFragment.this.eventsLoaded(this.eventsTmp, null);
 					break;
-				case DATA_TYPE_PAST_EVENTS:
+				case ListsVPAdapter.ID_EVENTS_LIST_PAST:
 					MainDataRetainFragment.this.eventsLoaded(null, this.eventsTmp);
 					break;
-				case DATA_TYPE_OWNED_GROUPS:
+				case ListsVPAdapter.ID_GROUPS_LIST_OWNED:
 					MainDataRetainFragment.this.groupsLoaded(this.groupTmp, null);
 					break;
-				case DATA_TYPE_OTHER_GROUPS:
+				case ListsVPAdapter.ID_GROUPS_LIST_OTHER:
 					MainDataRetainFragment.this.groupsLoaded(null, this.groupTmp);
 					break;
 				}//switch

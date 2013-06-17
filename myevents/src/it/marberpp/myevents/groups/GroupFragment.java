@@ -2,7 +2,6 @@ package it.marberpp.myevents.groups;
 
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
-
 import it.marberpp.myevents.hibernate.DatabaseHelper;
 import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.ThreadUtilities;
@@ -75,6 +74,7 @@ public class GroupFragment extends ListFragment {
 		this.vProgressBar = result.findViewById(R.id.progressBar);
 		this.accountsListView = (ListView) result.findViewById(android.R.id.list);
 
+		this.accountsListView.setClickable(false);
 		//this.pBody = result.findViewById(R.id.panelInfos);
 		//this.txtName = (TextView) result.findViewById(R.id.txtName);
 		//this.txtDescription = (TextView) result.findViewById(R.id.txtDescription);
@@ -119,7 +119,8 @@ public class GroupFragment extends ListFragment {
 		
 		//this.txtName.setText(group.getGrpId());
 		//this.txtDescription.setText(group.getGrpDescription());
-		this.accountsAdapter = new AccountRowAdapter();
+
+		this.accountsAdapter = new AccountRowAdapter(this.accounts);
 		this.accountsListView.setAdapter(this.accountsAdapter);
 
 	}
@@ -177,16 +178,32 @@ public class GroupFragment extends ListFragment {
 	
 
 
+	
+	
+
 	//###################################################
 	//###################################################
 	class AccountRowAdapter extends ArrayAdapter<Account> {
-		View convertGroup = null;
-		View convertAccount = null;
-		
-		AccountRowAdapter() {
-			super(GroupFragment.this.getActivity(),R.id.txtAccount, GroupFragment.this.accounts);
+        private static final int TYPE_GROUP = 0;
+        private static final int TYPE_ACCOUNT = 1;
+
+		AccountRowAdapter(List<Account> accountsTmp) {
+			super(GroupFragment.this.getActivity(),R.id.txt_id, accountsTmp);
+			
 		}
 
+		
+		
+		@Override
+		public int getViewTypeCount(){
+			return 2;
+		}
+
+        @Override
+        public int getItemViewType(int position) {
+            return position == 0 ? TYPE_GROUP : TYPE_ACCOUNT;
+        }		
+		
 		@Override
 		public int getCount() {
 			return super.getCount() + 1;
@@ -195,44 +212,31 @@ public class GroupFragment extends ListFragment {
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			if(position == 0){
+			
+			if(this.getItemViewType(position) == TYPE_GROUP){
 				GroupDetailRowWrapper wrapper;
 				
-				if(convertGroup == null){
+				if(convertView == null){
 					convertView = getActivity().getLayoutInflater().inflate(R.layout.group_detail_row, null);
 					wrapper = new GroupDetailRowWrapper(convertView);
 					convertView.setTag(wrapper);
-					this.convertGroup = convertView;
 				} else {
-					if(convertView != null && convertView.getTag() instanceof AccountRowWrapper){
-						this.convertAccount = convertView;
-					}
-					
-					wrapper = (GroupDetailRowWrapper)convertGroup.getTag();
-					convertView = this.convertGroup;
-					wrapper.populate(GroupFragment.this.group);
+					wrapper = (GroupDetailRowWrapper)convertView.getTag();
 				}
-
+				wrapper.populate(GroupFragment.this.group);
+				
 			} else {
 				AccountRowWrapper wrapper;
-				
-				if(convertView == null || convertView.getTag() instanceof GroupDetailRowWrapper){
-					if(this.convertAccount == null){
-						convertView = getActivity().getLayoutInflater().inflate(R.layout.accounts_list_row, null);
-						wrapper = new AccountRowWrapper(convertView);
-						convertView.setTag(wrapper);
-					} else {
-						convertView = this.convertAccount;
-						this.convertAccount = null;
-						wrapper = (AccountRowWrapper)convertView.getTag();
-					}
+
+				if(convertView == null){
+					convertView = getActivity().getLayoutInflater().inflate(R.layout.accounts_list_row, null);
+					wrapper = new AccountRowWrapper(convertView);
+					convertView.setTag(wrapper);
 				} else {
 					wrapper = (AccountRowWrapper)convertView.getTag();
 				}
-
-				wrapper.populate(getItem(position-1));
+				wrapper.populate(getItem(position -1));
 			}
-
 			
 			return convertView;
 		}
@@ -242,37 +246,50 @@ public class GroupFragment extends ListFragment {
 
 
 	
+	//###################################################
+	private static class RowWrapper {
+		TextView txt_id = null;
+		
+		public String getRowId(){
+			return this.txt_id.getText().toString();
+		}
+	}
 	
 	
 	//###################################################
-	private static class AccountRowWrapper {
+	private static class AccountRowWrapper extends RowWrapper {
+		//TextView txt_id = null;
 		private TextView txtAccount;
 		
 		public AccountRowWrapper(View v) {
+			txt_id = (TextView) v.findViewById(R.id.txt_id);
 			txtAccount = (TextView) v.findViewById(R.id.txtAccount);
 		}
 		
 		public void populate(Account account) {
+			txt_id.setText("acn_" + account.getAcnId());
 			txtAccount.setText(account.getAcnId());
 		}
 	}
 		
 
 	//###################################################
-	private static class GroupDetailRowWrapper {
+	private static class GroupDetailRowWrapper extends RowWrapper {
+		//TextView txt_id = null;
 		TextView txtName = null;
 		TextView txtDescription = null;
 		
 		public GroupDetailRowWrapper(View v) {
+			txt_id = (TextView) v.findViewById(R.id.txt_id);
 			this.txtName = (TextView) v.findViewById(R.id.txtName);
 			this.txtDescription = (TextView) v.findViewById(R.id.txtDescription);
 		}
 		
 		public void populate(Group group) {
+			txt_id.setText("grp_" + group.getGrpId());
 			this.txtName.setText(group.getGrpId());
 			this.txtDescription.setText(group.getGrpDescription());
 		}
 	}
-			
-	
+				
 }

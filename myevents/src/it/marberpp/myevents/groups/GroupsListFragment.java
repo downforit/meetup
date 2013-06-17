@@ -6,7 +6,6 @@ import it.marberpp.myevents.utils.GenericFragmentInterface;
 
 import java.util.List;
 
-import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ public class GroupsListFragment extends ListFragment {
 	int pageId = -1;
 
 	View vProgressBar = null;
-	GroupRowAdapter GroupsAdapter;
+	GroupRowAdapter groupsAdapter;
 	ListView groupsListView = null;
 	
 	private GenericFragmentInterface genericListener = null;
@@ -97,7 +96,7 @@ public class GroupsListFragment extends ListFragment {
 	//***************************************************
 	@Override
 	public void onListItemClick(ListView parent, View v, int position, long id) {
-		Group currentGroup = this.GroupsAdapter.getItem(position);
+		Group currentGroup = this.groupsAdapter.getItem(position);
 		
 		if(this.pageId == PAGE_ID_SELECTION_MODE){
 			Log.d(getClass().getSimpleName(), " groupId = " + currentGroup.getGrpId());
@@ -121,11 +120,11 @@ public class GroupsListFragment extends ListFragment {
 	public void setGroups(List<Group> groups) {
 		Log.d(getClass().getSimpleName(), "SET groups avviato pageId = " + this.pageId);
 		this.groups = groups;
+		this.groupsAdapter = null;
 
 		this.showContents();
 	}
-
-
+	
 	
 	//***************************************************
 	public GenericFragmentInterface getGenericListener() {
@@ -147,10 +146,10 @@ public class GroupsListFragment extends ListFragment {
 		}
 
 		if(this.groups != null){
-			this.GroupsAdapter = new GroupRowAdapter();
+			this.groupsAdapter = new GroupRowAdapter();
 			this.vProgressBar.setVisibility(View.GONE);
 			this.groupsListView.setVisibility(View.VISIBLE);
-			this.groupsListView.setAdapter(this.GroupsAdapter);
+			this.groupsListView.setAdapter(this.groupsAdapter);
 		} else {
 			this.vProgressBar.setVisibility(View.VISIBLE);
 			this.groupsListView.setVisibility(View.GONE);
@@ -160,6 +159,14 @@ public class GroupsListFragment extends ListFragment {
 		
 	}
 	
+	
+	
+	//***************************************************
+	public void reloadGroups() {
+		this.groups = null;
+		this.showContents();
+		
+	}
 	
 	
 	

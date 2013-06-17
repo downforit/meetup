@@ -1,19 +1,8 @@
 package it.marberpp.myevents.accounts;
 
-import mymeeting.hibernate.pojo.Account;
-import mymeeting.hibernate.pojo.Event;
-import mymeeting.hibernate.pojo.Group;
-import it.marberpp.myevents.MainDataRetainFragment;
 import it.marberpp.myevents.MainLib;
-import it.marberpp.myevents.R;
-import it.marberpp.myevents.events.EventsListFragment;
 import it.marberpp.myevents.utils.GenericFragmentInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;

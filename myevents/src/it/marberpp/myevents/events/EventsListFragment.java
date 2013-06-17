@@ -118,9 +118,18 @@ public class EventsListFragment extends ListFragment {
 	public void setEvents(List<Event> events) {
 		Log.d(getClass().getSimpleName(), "SET EVENT avviato pageId = " + this.pageId);
 		this.events = events;
+		this.eventsAdapter = null;
 
 		this.showContents();
 	}
+	
+	//***************************************************
+	public void addEvent(Event event) {
+		if(this.eventsAdapter != null){
+			this.eventsAdapter.add(event);
+		}
+	}
+	
 
 	//***************************************************
 	private void showContents() {

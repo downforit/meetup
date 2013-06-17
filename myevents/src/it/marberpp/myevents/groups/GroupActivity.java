@@ -3,7 +3,6 @@ package it.marberpp.myevents.groups;
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
 import it.marberpp.myevents.accounts.AccountSelectActivity;
-import it.marberpp.myevents.login.LoginAcrivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +39,7 @@ public class GroupActivity extends SherlockFragmentActivity {
 	//***********************************************
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		new MenuInflater(this).inflate(R.menu.group_activity, menu);
+		new MenuInflater(this).inflate(R.menu.add, menu);
 		return(super.onCreateOptionsMenu(menu));
 	}
 

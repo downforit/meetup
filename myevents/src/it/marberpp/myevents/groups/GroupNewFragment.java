@@ -1,5 +1,6 @@
 package it.marberpp.myevents.groups;
 
+import it.marberpp.myevents.MainDataRetainFragment;
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
 import it.marberpp.myevents.hibernate.DatabaseHelper;
@@ -156,6 +157,8 @@ public class GroupNewFragment extends SherlockFragment {
 					ExceptionsUtils.standardManagingException(this.exception, getActivity());
 				}
 			} else {
+				MainDataRetainFragment.staticInstance.addOwnedGroup(this.group);
+				//MainDataRetainFragment.staticInstance.ownedGroups.add(this.group);
 				GroupNewFragment.this.groupCreated();
 			}
 		}

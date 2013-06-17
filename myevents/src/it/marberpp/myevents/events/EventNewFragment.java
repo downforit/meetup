@@ -1,16 +1,15 @@
 package it.marberpp.myevents.events;
 
+import it.marberpp.myevents.MainDataRetainFragment;
 import it.marberpp.myevents.MainLib;
 import it.marberpp.myevents.R;
 import it.marberpp.myevents.groups.GroupSelectActivity;
 import it.marberpp.myevents.hibernate.DatabaseHelper;
-import it.marberpp.myevents.login.LoginAcrivity;
 import it.marberpp.myevents.network.NetworkHelper;
 import it.marberpp.myevents.utils.ExceptionsUtils;
 import it.marberpp.myevents.utils.GenericFragmentInterface;
 import it.marberpp.myevents.utils.ThreadUtilities;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,10 +28,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -79,6 +77,7 @@ public class EventNewFragment extends SherlockFragment {
 			@Override
 			public void onClick(View v) {
 				Intent intentTmp=new Intent(getActivity(), GroupSelectActivity.class);
+				intentTmp.putExtra(MainLib.PARAM_USERNAME, username);
 				startActivityForResult(intentTmp, GroupSelectActivity.ACTIVITY_ID);
 			}
 		});
@@ -225,6 +224,7 @@ public class EventNewFragment extends SherlockFragment {
 					ExceptionsUtils.standardManagingException(this.exception, getActivity());
 				}
 			} else {
+				MainDataRetainFragment.staticInstance.addEvent(this.event);
 				EventNewFragment.this.eventCreated();
 			}
 		}

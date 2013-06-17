@@ -193,13 +193,13 @@ public class MainActivity extends SherlockFragmentActivity {
 			break;
 		case EventNewActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_OK){
-				MainDataRetainFragment.staticInstance.reloadLists();
+				//MainDataRetainFragment.staticInstance.reloadLists();
 			}
 			
 			break;
 		case GroupNewActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_OK){
-				MainDataRetainFragment.staticInstance.reloadLists();
+				//MainDataRetainFragment.staticInstance.reloadLists(); //ho gia' ricaricato GroupNewActivity 
 			}
 			
 			break;

@@ -4,10 +4,9 @@
  */
 package mymeeting.services.responses;
 
-import com.google.gson.annotations.Expose;
-import java.util.List;
-import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
+
+import com.google.gson.annotations.Expose;
 
 /**
  *
