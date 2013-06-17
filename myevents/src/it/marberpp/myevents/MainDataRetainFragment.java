@@ -358,9 +358,6 @@ public class MainDataRetainFragment extends SherlockFragment {
 	public void addOwnedGroup(Group group){
 		this.ownedGroups.add(group);
 		GroupsListFragment listFragment = (GroupsListFragment)this.elfList.get(ListsVPAdapter.ID_GROUPS_LIST_OWNED);
-		if(listFragment != null){
-			listFragment.addGroupToGroupAdapter(group);
-		}
 	}
 	
 	
