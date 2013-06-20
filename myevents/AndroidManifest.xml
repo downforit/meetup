@@ -32,6 +32,14 @@
         <activity android:name=".groups.GroupNewActivity"></activity>
         <activity android:name=".groups.GroupSelectActivity"></activity>
         <activity android:name=".accounts.AccountSelectActivity"></activity>
+
+        
+		<provider android:name=".MyEventsContentProvider"
+		    android:exported="true"
+		 	android:readPermission="true"
+		 	android:writePermission="true"
+		 	android:authorities="it.marber.myevents.provider" />
+        
         </application>
 
 </manifest>

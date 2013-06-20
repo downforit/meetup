@@ -261,12 +261,16 @@ public class NetworkHelper {
 		
 		return result;
 	}
-	
-	//http://192.168.1.3:8080/mymeeting/eventservice?op=syncevents&uname=marber&lastUp=2013%2F06%2F08+15%3A47%3A30
+
+
 	//*********************************************
-	public static List<Event> getEventsToSync(String username, String lastUpdate){
+	public static String getEventsToSyncJson(String username, String lastUpdate){
+		return getEventsToSyncJsonRaw(username, lastUpdate, true);
+	}
+	
+	//*********************************************
+	private static String getEventsToSyncJsonRaw(String username, String lastUpdate, boolean checkResponse){
 		String url;
-		ResponseEventsList responseEvents = null;
 		
 		try{
 			url = "http://" + ServicesUtils.DNS_SERVER + ":" + ServicesUtils.IP_PORT_NUMBER + ServicesUtils.HTTP_SERVICE_URI + "?" 
@@ -285,9 +289,40 @@ public class NetworkHelper {
 		}
 		
 
-		try {
-			String jsonResponse = NetworkHelper.callServer(url);
 
+		String jsonResponse = null;
+		try {
+			jsonResponse = NetworkHelper.callServer(url);
+
+			if(checkResponse){
+				GenericResponse response = null;
+
+				Type listType = new TypeToken<GenericResponse>(){}.getType();
+				Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
+				response = gsonConverter.fromJson(jsonResponse, listType);			
+				
+				if( !response.isServiceSuccessed() ){
+					throw new C_NetworkResponseException(response.getErrorCode() + ": " + response.getDescription());
+				}
+			}
+			
+		} catch (Throwable e) {
+			throw new C_NetworkComunicationException(e);
+		}
+		
+		return jsonResponse;
+	}
+
+	
+	//*********************************************
+	public static List<Event> getEventsToSync(String username, String lastUpdate){
+		ResponseEventsList responseEvents = null;
+
+
+		String jsonResponse = NetworkHelper.getEventsToSyncJsonRaw(username, lastUpdate, false);
+		
+		
+		try {
 			
 			Type listType = new TypeToken<ResponseEventsList>(){}.getType();
 			Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
@@ -302,8 +337,8 @@ public class NetworkHelper {
 		}
 		
 		return responseEvents.getEvents();
+		
 	}
-	
 	
 	
 
@@ -358,12 +393,17 @@ public class NetworkHelper {
 		return result;
 	}
 	
+
+	//*********************************************
+	public static String getGroupsToSyncJson(String username, String lastUpdate){
+		return getGroupsToSyncJsonRaw(username, lastUpdate, true);
+	}
+	
 	
 	
 	//*********************************************
-	public static List<Group> getGroupsToSync(String username, String lastUpdate){
+	public static String getGroupsToSyncJsonRaw(String username, String lastUpdate, boolean checkResponse ){
 		String url;
-		ResponseGroupsList responseGroups = null;
 		
 		try{
 			url = "http://" + ServicesUtils.DNS_SERVER + ":" + ServicesUtils.IP_PORT_NUMBER + ServicesUtils.HTTP_SERVICE_URI + "?" 
@@ -382,10 +422,40 @@ public class NetworkHelper {
 		}
 		
 
+		String jsonResponse = null;
+		
 		try {
-			String jsonResponse = NetworkHelper.callServer(url);
+			jsonResponse = NetworkHelper.callServer(url);
+
+			if(checkResponse){
+				GenericResponse response = null;
+
+				Type listType = new TypeToken<GenericResponse>(){}.getType();
+				Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
+				response = gsonConverter.fromJson(jsonResponse, listType);			
+				
+				if( !response.isServiceSuccessed() ){
+					throw new C_NetworkResponseException(response.getErrorCode() + ": " + response.getDescription());
+				}
+			}
 
 			
+		} catch (Throwable e) {
+			throw new C_NetworkComunicationException(e);
+		}
+		
+		return jsonResponse;
+	}
+	
+	
+	
+	//*********************************************
+	public static List<Group> getGroupsToSync(String username, String lastUpdate){		
+		ResponseGroupsList responseGroups;
+
+		String jsonResponse = getGroupsToSyncJsonRaw(username, lastUpdate, false);
+		
+		try {
 			Type listType = new TypeToken<ResponseGroupsList>(){}.getType();
 			Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
 			responseGroups = gsonConverter.fromJson(jsonResponse, listType);			
@@ -401,13 +471,16 @@ public class NetworkHelper {
 		return responseGroups.getGroups();
 	}
 	
-	
+
+	//*********************************************
+	public static String getRAcnGrpsToSyncJson(String username, String lastUpdate){
+		return getRAcnGrpsToSyncJsonRaw(username, lastUpdate, true);
+	}
 
 	
 	//*********************************************
-	public static List<RAcnGrp> getRAcnGrpsToSync(String username, String lastUpdate){
+	public static String getRAcnGrpsToSyncJsonRaw(String username, String lastUpdate, boolean checkResponse){
 		String url;
-		ResponseRAcnGrpsList responseRAcnGrps = null;
 		
 		try{
 			url = "http://" + ServicesUtils.DNS_SERVER + ":" + ServicesUtils.IP_PORT_NUMBER + ServicesUtils.HTTP_SERVICE_URI + "?" 
@@ -426,10 +499,39 @@ public class NetworkHelper {
 		}
 		
 
+		String jsonResponse = null;
 		try {
-			String jsonResponse = NetworkHelper.callServer(url);
+			jsonResponse = NetworkHelper.callServer(url);
 
+			if(checkResponse){
+				GenericResponse response = null;
+
+				Type listType = new TypeToken<GenericResponse>(){}.getType();
+				Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
+				response = gsonConverter.fromJson(jsonResponse, listType);			
+				
+				if( !response.isServiceSuccessed() ){
+					throw new C_NetworkResponseException(response.getErrorCode() + ": " + response.getDescription());
+				}
+			}
 			
+		} catch (Throwable e) {
+			throw new C_NetworkComunicationException(e);
+		}
+		
+		return jsonResponse;
+	}
+	
+
+	
+	//*********************************************
+	public static List<RAcnGrp> getRAcnGrpsToSync(String username, String lastUpdate){
+		ResponseRAcnGrpsList responseRAcnGrps = null;
+
+		String jsonResponse = getRAcnGrpsToSyncJsonRaw(username, lastUpdate, false);
+
+		
+		try {
 			Type listType = new TypeToken<ResponseRAcnGrpsList>(){}.getType();
 			Gson gsonConverter = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setDateFormat(ServicesUtils.JSON_DATE_FORMAT).create();
 			responseRAcnGrps = gsonConverter.fromJson(jsonResponse, listType);			
@@ -442,7 +544,7 @@ public class NetworkHelper {
 			throw new C_NetworkComunicationException(e);
 		}
 		
-		return responseRAcnGrps.getrAcnGrp();
+		return responseRAcnGrps.getrAcnGrps();
 	}
 	
 	

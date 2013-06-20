@@ -384,7 +384,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			try{
 				switch (this.operation){
 				case OP_SYNC:
-					DBSynchronizer.syncDb(MainActivity.this, this.username);
+					DBSynchronizer.syncDb(MainActivity.this, this.username, getContentResolver());
 					break;
 				case OP_RESET:
 					DatabaseHelper.getInstance(MainActivity.this).resetDatabase();

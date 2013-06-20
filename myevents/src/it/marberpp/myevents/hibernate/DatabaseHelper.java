@@ -16,6 +16,7 @@ import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
 import mymeeting.hibernate.pojo.RAcnGrp;
 import mymeeting.hibernate.pojo.RAcnGrpId;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -348,11 +349,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		return result;
 	}
+
+	
+	//***************************************************
+	public void updateEvent(ContentValues values){
+		SQLiteDatabase db = null;
+
+		try{
+			db = getReadableDatabase();
+			db.beginTransaction();
+
+			String[] args = {
+					values.getAsString("EVN_ID"),
+					values.getAsString("EVN_DESCRIPTION"),
+					values.getAsString("EVN_IMAGE_URL"),
+					ServicesUtils.dateFormatter.format(values.getAsString("EVN_DATE")),
+					ServicesUtils.dateFormatter.format(values.getAsString("EVN_CREATION_DATE")),
+					values.getAsString("GRP_ID"),
+					values.getAsString("ACN_ID_OWNER"),
+					"false",
+					ServicesUtils.dateFormatter.format(values.getAsString("LAST_UPDATE")),
+					"false",
+					values.getAsString("FLG_DELETED")
+					};
+			
+			db.execSQL("INSERT OR REPLACE INTO 'event' VALUES "
+					+ "(?,?,?,?,?,?,?,?,?,?,?)", args
+					);
+
+			db.setTransactionSuccessful();
+
+		} catch (Throwable ex){
+			throw new C_DatabaseException(ex);
+		} finally {
+			if(db != null){
+				db.endTransaction();
+			}
+		}
+
+	}
+	
 	
 	//***************************************************
 	public void updateEvents(List<Event> events){
 		SQLiteDatabase db = null;
 
+		if(events == null || events.size() == 0){
+			return;
+		}
+		
 		try{
 			db = getReadableDatabase();
 			db.beginTransaction();

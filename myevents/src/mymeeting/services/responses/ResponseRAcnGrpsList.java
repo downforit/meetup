@@ -14,7 +14,7 @@ import mymeeting.hibernate.pojo.RAcnGrp;
  */
 public class ResponseRAcnGrpsList extends GenericResponse{
   @Expose
-  private List<RAcnGrp> rAcnGrp;
+  private List<RAcnGrp> rAcnGrps;
   
 
   public ResponseRAcnGrpsList(){
@@ -24,15 +24,15 @@ public class ResponseRAcnGrpsList extends GenericResponse{
   /**
    * @return the rAcnGrp
    */
-  public List<RAcnGrp> getrAcnGrp() {
-    return rAcnGrp;
+  public List<RAcnGrp> getrAcnGrps() {
+    return rAcnGrps;
   }
 
   /**
    * @param rAcnGrp the rAcnGrp to set
    */
-  public void setrAcnGrp(List<RAcnGrp> rAcnGrp) {
-    this.rAcnGrp = rAcnGrp;
+  public void setrAcnGrps(List<RAcnGrp> rAcnGrps) {
+    this.rAcnGrps = rAcnGrps;
   }
 
   

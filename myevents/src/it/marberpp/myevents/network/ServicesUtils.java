@@ -14,6 +14,7 @@ public class ServicesUtils {
   public static final String JSON_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
   public static final SimpleDateFormat dateFormatter = new SimpleDateFormat(JSON_DATE_FORMAT);
  
+  //public static final String DNS_SERVER = "192.168.1.3";
   //public static final String DNS_SERVER = "192.168.1.4";
   //public static final String DNS_SERVER = "192.168.136.229";
   //public static final String DNS_SERVER = "10.37.130.4";
