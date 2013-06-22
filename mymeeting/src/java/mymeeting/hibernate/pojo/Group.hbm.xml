@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 7-giu-2013 0.23.19 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="mymeeting.hibernate.pojo.Group" table="group" catalog="my_meeting">
+        <id name="grpId" type="string">
+            <column name="GRP_ID" length="50" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="account" class="mymeeting.hibernate.pojo.Account" fetch="select">
+            <column name="ACN_ID_OWNER" length="50" not-null="true" unique="true" />
+        </many-to-one>
+        <property name="grpDescription" type="string">
+            <column name="GRP_DESCRIPTION" length="500" />
+        </property>
+        <property name="grpImageUrl" type="string">
+            <column name="GRP_IMAGE_URL" length="500" />
+        </property>
+        <property name="grpCreationDate" type="timestamp">
+            <column name="GRP_CREATION_DATE" length="19" not-null="true" />
+        </property>
+        <property name="flgNeedSync" type="java.lang.Boolean">
+            <column name="FLG_NEED_SYNC" />
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="LAST_UPDATE" length="19" not-null="true" />
+        </property>
+        <property name="flgShowed" type="java.lang.Boolean">
+            <column name="FLG_SHOWED" />
+        </property>
+        <property name="flgDeleted" type="java.lang.Boolean">
+            <column name="FLG_DELETED" />
+        </property>
+        <set name="events" inverse="true">
+            <key>
+                <column name="GRP_ID" length="50" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.Event" />
+        </set>
+        <set name="RAcnGrps" inverse="true">
+            <key>
+                <column name="GRP_ID" length="50" not-null="true" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.RAcnGrp" />
+        </set>
+    </class>
+</hibernate-mapping>

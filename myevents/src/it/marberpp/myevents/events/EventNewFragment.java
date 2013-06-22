@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import mymeeting.exceptions.C_NetworkKeyDuplicateException;
+import mymeeting.hibernate.pojo.Account;
 import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
 import android.app.Activity;
@@ -150,6 +151,7 @@ public class EventNewFragment extends SherlockFragment {
 	public void save(){
 		Event event = new Event();
 		Group group = new Group();
+		Account account = new Account();
 	
 
 		if(this.txtGroup.getText().length() <= 0 ){
@@ -165,6 +167,8 @@ public class EventNewFragment extends SherlockFragment {
 		group.setGrpId(this.txtGroup.getText().toString());
 		event.setGroup(group);
 		
+		account.setAcnId(this.username);
+		event.setAccount(account);		
 		//this.DatePicker.setCalendarViewShown(false);
 		
 		//event.setEvnDate(new Date(this.datePicker.getCalendarView().getDate()));

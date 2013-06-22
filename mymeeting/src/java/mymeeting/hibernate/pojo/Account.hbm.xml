@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 7-giu-2013 0.23.19 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="mymeeting.hibernate.pojo.Account" table="account" catalog="my_meeting">
+        <id name="acnId" type="string">
+            <column name="ACN_ID" length="50" />
+            <generator class="assigned" />
+        </id>
+        <property name="acnPasswd" type="string">
+            <column name="ACN_PASSWD" length="20" not-null="true" />
+        </property>
+        <property name="acnImageUrl" type="string">
+            <column name="ACN_IMAGE_URL" length="500" />
+        </property>
+        <property name="acnCreationDate" type="timestamp">
+            <column name="ACN_CREATION_DATE" length="19" />
+        </property>
+        <property name="flgNeedSync" type="java.lang.Boolean">
+            <column name="FLG_NEED_SYNC" />
+        </property>
+        <property name="lastUpdate" type="timestamp">
+            <column name="LAST_UPDATE" length="19" not-null="true" />
+        </property>
+        <property name="flgShowed" type="java.lang.Boolean">
+            <column name="FLG_SHOWED" />
+        </property>
+        <property name="flgDeleted" type="java.lang.Boolean">
+            <column name="FLG_DELETED" />
+        </property>
+        <set name="RAcnEvns" inverse="true">
+            <key>
+                <column name="ACN_ID" length="50" not-null="true" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.RAcnEvn" />
+        </set>
+        <set name="groups" inverse="true">
+            <key>
+                <column name="ACN_ID_OWNER" length="50" not-null="true" unique="true" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.Group" />
+        </set>
+        <set name="RAcnGrps" inverse="true">
+            <key>
+                <column name="ACN_ID" length="50" not-null="true" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.RAcnGrp" />
+        </set>
+        <set name="events" inverse="true">
+            <key>
+                <column name="ACN_ID_OWNER" length="50" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.Event" />
+        </set>
+        <set name="eventDetts" inverse="true">
+            <key>
+                <column name="ACN_ID" length="50" />
+            </key>
+            <one-to-many class="mymeeting.hibernate.pojo.EventDett" />
+        </set>
+    </class>
+</hibernate-mapping>
