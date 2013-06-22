@@ -1,4 +1,4 @@
-package it.marberpp.myevents;
+package it.marberpp.myevents.interfaces;
 
 import mymeeting.hibernate.pojo.Event;
 import android.content.ContentValues;

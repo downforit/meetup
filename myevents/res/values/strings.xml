@@ -5,7 +5,9 @@
     <string name="app_name">MyEvents</string>
 
     <string name="twoPointSep">": "</string>
-
+    
+    <string name="syncLabel">MyEventsAdapter</string>
+    
     <string name="mainVPTabFutureEvents">Future events</string>
     <string name="mainVPTabPastEvents">Past events</string>
     <string name="mainVPTabOwnedGroups">Owned groups</string>

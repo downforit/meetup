@@ -1,6 +1,6 @@
 package it.marberpp.myevents.network;
 
-import it.marberpp.myevents.MyEventsContract;
+import it.marberpp.myevents.interfaces.MyEventsContract;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;

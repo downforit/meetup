@@ -23,6 +23,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class LoginFragment extends SherlockFragment implements View.OnClickListener {
 	
+	private String authTokenType = null;
+	private String loginType = null;
+	
 	private LoginListener listener = null;
 	
 	private EditText txtUsername = null;
@@ -34,10 +37,13 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 	private TextView lblNewUser = null;
 	
 	//***************************************************
-	protected static LoginFragment newInstance(String username, String password) {
+	protected static LoginFragment newInstance(String username, String password, String authTokenType, String loginType) {
 		LoginFragment f = new LoginFragment();
 		
-		if( (username != null && username.length() > 0) || (password != null && password.length() > 0) ){
+		if( (username != null && username.length() > 0)
+		     || (password != null && password.length() > 0)
+		     || (authTokenType != null && authTokenType.length() > 0)
+		     || (loginType != null && loginType.length() > 0) ){
 			Bundle args = new Bundle();
 			
 			if(username != null && username.length() > 0){
@@ -46,6 +52,14 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 
 			if(password != null && password.length() > 0){
 				args.putString(MainLib.PARAM_PASSWORD, password);
+			}
+			
+			if(authTokenType != null && authTokenType.length() > 0){
+				args.putString(MainLib.PARAM_AUTHTOKEN_TYPE, authTokenType);
+			}
+
+			if(loginType != null && loginType.length() > 0){
+				args.putString(MainLib.PARAM_LOGIN_TYPE, loginType);
 			}
 			
 			f.setArguments(args);
@@ -75,6 +89,9 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 		if(getArguments() != null){
 			String username = getArguments().getString(MainLib.PARAM_USERNAME);
 			String password = getArguments().getString(MainLib.PARAM_PASSWORD);
+			
+			this.authTokenType = getArguments().getString(MainLib.PARAM_AUTHTOKEN_TYPE);
+			this.loginType = getArguments().getString(MainLib.PARAM_LOGIN_TYPE);
 	
 			if(username != null){
 				this.txtUsername.setText(username);
@@ -84,6 +101,14 @@ public class LoginFragment extends SherlockFragment implements View.OnClickListe
 				this.txtPassword.setText(password);
 			}
 		}
+		
+
+		Log.i(getClass().getSimpleName(), "loginType = " + this.loginType + "  authTokenType = " + this.authTokenType + "  VAL_MY_EVENTS_AUTHTOKEN_TYPE " + MainLib.VAL_MY_EVENTS_AUTHTOKEN_TYPE);
+
+		if (loginType != null) {
+        	this.lblNewUser.setVisibility(View.GONE);
+        }
+		
 		
 		return result;
 	}

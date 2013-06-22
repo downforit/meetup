@@ -1,4 +1,4 @@
-package it.marberpp.myevents;
+package it.marberpp.myevents.interfaces;
 
 import java.lang.reflect.Type;
 
