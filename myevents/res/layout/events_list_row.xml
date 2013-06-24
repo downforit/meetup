@@ -2,12 +2,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:background="@drawable/cornice">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/Honeydew" >
+        android:layout_height="wrap_content" >
 
         <TextView
             android:id="@+id/lblEvent"
@@ -43,7 +42,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Honeydew"
         android:paddingTop="3dp" >
 
         <TextView
@@ -69,7 +67,6 @@
         android:id="@+id/txtEventDescr"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Honeydew"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/Black" />
     
