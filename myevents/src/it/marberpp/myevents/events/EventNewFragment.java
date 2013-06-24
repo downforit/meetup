@@ -121,7 +121,7 @@ public class EventNewFragment extends SherlockFragment {
 		switch(requestCode){
 		case GroupSelectActivity.ACTIVITY_ID:
 			if(resultCode == Activity.RESULT_CANCELED){
-				//non faccio niente
+				//do nothing
 			} else if(resultCode == Activity.RESULT_OK){
 				String groupId = data.getStringExtra(MainLib.PARAM_GROUP_ID);
 
