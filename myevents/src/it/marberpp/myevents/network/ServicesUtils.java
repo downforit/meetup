@@ -20,8 +20,8 @@ public class ServicesUtils {
   //public static final String DNS_SERVER = "10.37.130.4";
   //public static final String DNS_SERVER = "192.168.0.14";
   //public static final String DNS_SERVER = "192.168.43.150";
-  public static final String DNS_SERVER = "192.168.67.129";
-  //public static final String DNS_SERVER = "46.105.16.216";
+  //public static final String DNS_SERVER = "192.168.67.129";
+  public static final String DNS_SERVER = "46.105.16.216";
   
   public static final String HTTP_SERVICE_URI = "/mymeeting/eventservice";
   
