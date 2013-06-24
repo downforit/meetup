@@ -26,6 +26,8 @@ import java.util.List;
 
 import mymeeting.hibernate.pojo.Event;
 import mymeeting.hibernate.pojo.Group;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -236,6 +238,8 @@ public class MainActivity extends SherlockFragmentActivity {
 			this.prefs = prefs;
 			
 			this.loadPreferences();
+			
+			
 		}
 		
 		
@@ -273,6 +277,15 @@ public class MainActivity extends SherlockFragmentActivity {
 
 	//***********************************************
 	private void verifyActivityStatus(){
+		if(this.loginVerified){
+	        final Account account = new Account(this.username, MainLib.VAL_ACCOUNT_TYPE);
+	        AccountManager mAccountManager = AccountManager.get(this);
+			final String pwd = mAccountManager.getPassword(account);
+			if(pwd == null){
+				this.loginVerified = false;
+			}
+		}
+		
 		if(!this.loginVerified){
 			Intent intentTmp=new Intent(this, LoginAcrivity.class);
 			intentTmp.putExtra(MainLib.PARAM_USERNAME, this.username);

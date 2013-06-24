@@ -1,10 +1,13 @@
 package it.marberpp.myevents.login;
 
 import it.marberpp.myevents.MainLib;
+import it.marberpp.myevents.R;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -18,7 +21,7 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 	
 	public static final int ACTIVITY_ID = 1134;
 
-    private AccountManager mAccountManager;
+    //private AccountManager mAccountManager;
 	
 	String authTokenType;
 	String loginType;
@@ -42,9 +45,24 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 				this.newAccount = true;
 			}
 			
-			if(this.loginType != null){
-				Log.i(getClass().getSimpleName(), "AccountManager creato");
-		        mAccountManager = AccountManager.get(this);
+			//if(this.loginType != null){
+			//	Log.i(getClass().getSimpleName(), "AccountManager creato");
+		    //    mAccountManager = AccountManager.get(this);
+			//}
+			
+			if(this.newAccount){
+		        new AlertDialog.Builder(this)
+		        .setIcon(android.R.drawable.ic_dialog_alert)
+		        .setTitle(R.string.createAccount)
+		        .setMessage(R.string.goToTheProgramForTheLogin)
+		        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+		            @Override
+		            public void onClick(DialogInterface dialog, int which) {
+		            	LoginAcrivity.this.finish();
+		            }
+		        })
+		        .show();
+		        
 			}
 			
 			Log.i(getClass().getSimpleName(), "@#@# loginType = " + loginType + "  authTokenType = " + this.authTokenType + "  VAL_MY_EVENTS_AUTHTOKEN_TYPE " + MainLib.VAL_MY_EVENTS_AUTHTOKEN_TYPE);
@@ -108,6 +126,8 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 		Intent i = getIntent();
 		i.putExtra(MainLib.PARAM_USERNAME, username);
 		i.putExtra(MainLib.PARAM_PASSWORD, password);
+
+        updateSystemAccounts(username, password, true);
 		
 		this.setResult(SherlockFragmentActivity.RESULT_OK, i);
 		finish();
@@ -127,16 +147,6 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
     protected void loginCompletedForSync(String username, String password) {
         Log.i(getClass().getSimpleName(), "loginCompletedForSync()  newAccount = "+ this.newAccount);
 
-        final Account account = new Account(username, MainLib.VAL_ACCOUNT_TYPE);
-
-        if(this.newAccount){
-            mAccountManager.addAccountExplicitly(account, password, null);
-            // Set contacts sync for this account.
-            ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
-        } else {
-            mAccountManager.setPassword(account, password);
-        }
-        
         final Intent intent = new Intent();
         String mAuthtoken = password;
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, username);
@@ -145,7 +155,20 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
             Log.i(getClass().getSimpleName(), "mAuthtoken = " + mAuthtoken  + "  authTokenType = " + authTokenType);
             intent.putExtra(AccountManager.KEY_AUTHTOKEN, mAuthtoken);
         }
-       
+
+        /*
+        final Account account = new Account(username, MainLib.VAL_ACCOUNT_TYPE);
+        AccountManager mAccountManager = AccountManager.get(this);
+        if(this.newAccount){
+            mAccountManager.addAccountExplicitly(account, password, null);
+            // Set contacts sync for this account.
+            ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
+        } else {
+            mAccountManager.setPassword(account, password);
+        }
+        */
+        updateSystemAccounts(username, password, this.newAccount);
+        
         //setAccountAuthenticatorResult(intent.getExtras());
         AccountAuthenticatorResponse mAccountAuthenticatorResponse = getIntent().getParcelableExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE);
         if (mAccountAuthenticatorResponse != null) {
@@ -160,6 +183,24 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
     }
 	
 
+    private void updateSystemAccounts(String username, String password, boolean createNewAccount){
+        final Account account = new Account(username, MainLib.VAL_ACCOUNT_TYPE);
+
+        AccountManager mAccountManager = AccountManager.get(this);
+        
+        if(createNewAccount){
+            if(mAccountManager.addAccountExplicitly(account, password, null) == true){
+	            // Set contacts sync for this account.
+	            ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
+            } else {
+                mAccountManager.setPassword(account, password);
+            }
+        } else {
+            mAccountManager.setPassword(account, password);
+        }
+    	
+    }
+    
     
     /**
      * Called when response is received from the server for confirm credentials
@@ -171,7 +212,10 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
     protected void loginCompletedForConfirmCredentials(String username, String password, boolean result) {
         Log.i(getClass().getSimpleName(), "finishConfirmCredentials()");
         final Account account = new Account(username, MainLib.VAL_ACCOUNT_TYPE);
+
+        AccountManager mAccountManager = AccountManager.get(this);
         mAccountManager.setPassword(account, password);
+
         final Intent intent = new Intent();
         intent.putExtra(AccountManager.KEY_BOOLEAN_RESULT, result);
 

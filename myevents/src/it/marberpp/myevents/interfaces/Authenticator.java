@@ -24,7 +24,9 @@ import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,7 +57,7 @@ class Authenticator extends AbstractAccountAuthenticator {
 
     	Log.i(TAG, "addAccount START");
    
-    	
+    	//*/
     	Log.i(TAG, "PARAM_AUTHTOKEN_TYPE =" + authTokenType);
         
         final Intent intent = new Intent(mContext, loginActivity);
@@ -64,7 +66,9 @@ class Authenticator extends AbstractAccountAuthenticator {
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         final Bundle bundle = new Bundle();
         bundle.putParcelable(AccountManager.KEY_INTENT, intent);
-
+		//*/
+    	
+	
         Log.i(TAG, "addAccount END");
 
         return bundle;
