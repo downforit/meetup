@@ -76,6 +76,11 @@ public class BufferedImageUtils {
   public static Object getRenderParamenter() {
      return renderParameter;
   }
+
+  //**************************************************
+  public static void setRenderParamenter(Object renderParam) {
+     renderParameter = renderParam;
+  }
   
     
   //*********************************************

@@ -1111,21 +1111,21 @@ public class TextUtil {
 
         int maxW = 600, maxH = 70;
 
-        result = GenericImageFactory.buildGenericImage(maxW, maxH, 4);
+        result = GenericImageFactory.getInstance().buildGenericImage(maxW, maxH, 4);
 
-        imgTmp = GenericImageFactory.buildGenericImage(TextUtil.buildBufferedImage(nomeSito, "Pristina", 25, Color.red, TextUtil.ALIGN_CENTER, maxW, maxH / 2, 1));
+        imgTmp = GenericImageFactory.getInstance().buildGenericImage(TextUtil.buildBufferedImage(nomeSito, "Pristina", 25, Color.red, TextUtil.ALIGN_CENTER, maxW, maxH / 2, 1));
         result.DrawImage(imgTmp, 0, 0);
 
         String str = indirizzo;
         if (tel != null && tel.length() > 1) {
             str = str + "\n" + "tel: " + tel;
         }
-        imgTmp = GenericImageFactory.buildGenericImage(TextUtil.buildBufferedImage(str, "", 12, Color.black, TextUtil.ALIGN_CENTER, maxW, maxH / 2, 1));
+        imgTmp = GenericImageFactory.getInstance().buildGenericImage(TextUtil.buildBufferedImage(str, "", 12, Color.black, TextUtil.ALIGN_CENTER, maxW, maxH / 2, 1));
         result.DrawImage(imgTmp, 0, result.getHeight() - imgTmp.getHeight());
 
         imgTmp = result;
 
-        result = GenericImageFactory.buildGenericImage(maxW, maxH, 3);
+        result = GenericImageFactory.getInstance().buildGenericImage(maxW, maxH, 3);
         result.fill(Color.white);
         result.DrawImage(imgTmp, 0, 0);
 
@@ -1145,7 +1145,7 @@ public class TextUtil {
     /***********************************************************/
     public static BufferedImage buildMaxBufferedImageFromDocument(StyledDocument styledDocument, int alignment, int maxW, int maxH, int numLivelli) {
 
-        GenericImage bozzaImg = GenericImageFactory.buildGenericImage(TextUtil.buildMinimumBufferedImageFromDocument(styledDocument, alignment, 1000, 1000, 1));
+        GenericImage bozzaImg = GenericImageFactory.getInstance().buildGenericImage(TextUtil.buildMinimumBufferedImageFromDocument(styledDocument, alignment, 1000, 1000, 1));
         float rappW = (float)maxW / bozzaImg.getWidth();
         float rappH = (float)maxH / bozzaImg.getHeight();
         float scaleFactor = Math.min(rappW, rappH);
@@ -1167,7 +1167,7 @@ public class TextUtil {
     /***********************************************************/
     public static TiledImage buildMaxTiledImageJAIFromDocument(StyledDocument styledDocument, int alignment, int maxW, int maxH, int numLivelli) {
 
-        GenericImage bozzaImg = GenericImageFactory.buildGenericImage(TextUtil.buildMinimumBufferedImageFromDocument(styledDocument, alignment, 1000, 1000, 1));
+        GenericImage bozzaImg = GenericImageFactory.getInstance().buildGenericImage(TextUtil.buildMinimumBufferedImageFromDocument(styledDocument, alignment, 1000, 1000, 1));
         float rappW = (float)maxW / bozzaImg.getWidth();
         float rappH = (float)maxH / bozzaImg.getHeight();
         float scaleFactor = Math.min(rappW, rappH);

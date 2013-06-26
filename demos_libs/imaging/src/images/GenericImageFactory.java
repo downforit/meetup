@@ -21,53 +21,70 @@ import utils.Sizes;
  * @author developer
  */
 public class GenericImageFactory {
+  static GenericImageFactory singletonInstance = null;
+    
+  private boolean flgUseJai = false;
+  private boolean flgUseVirtualImages = false;
 
-  private static boolean flgUseJai = false;
-  private static boolean flgUseVirtualImages = false;
+  public static GenericImageFactory getInstance(){
+      if(singletonInstance == null){
+          singletonInstance = newInstance(false);
+      }
+      
+      return singletonInstance;
+  }
 
+  
+  public static GenericImageFactory newInstance(boolean useJai){
+      GenericImageFactory result = new GenericImageFactory();
+      
+      result.setFlgUseJai(useJai);
+      
+      return result;
+  }
 
-  public static void setMaxQuality(){
+  public void setMaxQuality(){
     BufferedImageUtils.setMaxQuality();
-    GenericImageFactory.setFlgUseJai(true);
-    GenericImageFactory.setFlgUseVirtualImages(false);
+    this.setFlgUseJai(true);
+    this.setFlgUseVirtualImages(false);
   }
 
 
-  public static boolean isFlgUseJai() {
+  public boolean isFlgUseJai() {
     return flgUseJai;
   }
 
-  public static void setFlgUseJai(boolean aFlgUseJai) {
+  public void setFlgUseJai(boolean aFlgUseJai) {
     flgUseJai = aFlgUseJai;
   }
 
   private static boolean flgUseJaiOld = false;
 
-  public static void setFlgUseJaiTmp(boolean aFlgUseJai) {
+  public void setFlgUseJaiTmp(boolean aFlgUseJai) {
       flgUseJaiOld = flgUseJai;
       flgUseJai = aFlgUseJai;
   }
 
-  public static void ripristinaFlgUseJaiOld(){
+  public void ripristinaFlgUseJaiOld(){
       flgUseJai = flgUseJaiOld;
   }
 
   /**
    * @return the flgUseVirtualImages
    */
-  public static boolean isFlgUseVirtualImages() {
+  public boolean isFlgUseVirtualImages() {
     return flgUseVirtualImages;
   }
 
   /**
    * @param aFlgUseVirtualImages the flgUseVirtualImages to set
    */
-  public static void setFlgUseVirtualImages(boolean aFlgUseVirtualImages) {
+  public void setFlgUseVirtualImages(boolean aFlgUseVirtualImages) {
     flgUseVirtualImages = aFlgUseVirtualImages;
   }
 
   //*****************************************************/
-  private static boolean isGenericBufferedImage(){
+  private boolean isGenericBufferedImage(){
     return !isFlgUseJai();
   }
 
@@ -94,7 +111,7 @@ public class GenericImageFactory {
   */
 
   //*****************************************************/
-  public static GenericImage buildGenericImage(BufferedImage bufImage, boolean addTransparency){
+  public GenericImage buildGenericImage(BufferedImage bufImage, boolean addTransparency){
     GenericImage result = buildGenericImage(bufImage);
     if(addTransparency){
       if(result != null && result.getNumLivelli() < 4){
@@ -107,7 +124,7 @@ public class GenericImageFactory {
 
 
   //*****************************************************/
-  public static GenericImage buildGenericImage(BufferedImage bufImage){
+  public GenericImage buildGenericImage(BufferedImage bufImage){
     if(bufImage == null){
       return null;
     }
@@ -126,7 +143,7 @@ public class GenericImageFactory {
   }
 
   //*****************************************************/
-  public static GenericImage buildGenericImage(TiledImage tiledImage){
+  public GenericImage buildGenericImage(TiledImage tiledImage){
     if(tiledImage == null){
       return null;
     }
@@ -143,19 +160,19 @@ public class GenericImageFactory {
   }
 
   //*****************************************************/
-  public static GenericImage buildGenericImage(int widthMM, int heightMM, int DPI, int numLivelli){
+  public GenericImage buildGenericImage(int widthMM, int heightMM, int DPI, int numLivelli){
 
     return buildGenericImage(Sizes.mmTOpxByDPI(widthMM, DPI), Sizes.mmTOpxByDPI(heightMM, DPI), numLivelli, false);
   }
 
 
   //*****************************************************/
-  public static GenericImage buildGenericImage(int width, int height, int numLivelli){
+  public GenericImage buildGenericImage(int width, int height, int numLivelli){
     return buildGenericImage(width, height, numLivelli, false);
   }
 
   //*****************************************************/
-  public static GenericImage buildGenericImage(int width, int height, int numLivelli, boolean forceToUseBufferedImage){
+  public GenericImage buildGenericImage(int width, int height, int numLivelli, boolean forceToUseBufferedImage){
     GenericImage result = null;
 
     if(isFlgUseVirtualImages()){
@@ -170,13 +187,13 @@ public class GenericImageFactory {
   }
 
   //*****************************************************/
-  public static GenericImage readImage(String pathImage){
+  public GenericImage readImage(String pathImage){
     return readImage(pathImage, false, false);
   }
 
 
   //*****************************************************/
-  public static GenericImage readImage(String pathImage, boolean addTransparency, boolean forceToUseBufferedImage){
+  public GenericImage readImage(String pathImage, boolean addTransparency, boolean forceToUseBufferedImage){
     GenericImage result = null;
 
     if(isFlgUseVirtualImages()){
@@ -207,13 +224,13 @@ public class GenericImageFactory {
 
 
   //****************************************************
-  public static GenericImage readThumbnail(String imagePath, int maxWidth, int maxHeight, boolean forceToUseBufferedImage){
+  public GenericImage readThumbnail(String imagePath, int maxWidth, int maxHeight, boolean forceToUseBufferedImage){
     GenericImage result;
 
     ImageIcon iconTmp = LLJTUtils.getThumbnailImageIcon(imagePath);
     if (iconTmp != null) {
       //int moltiplicatore = 300 / iconTmp.getIconWidth();
-      result = GenericImageFactory.buildGenericImage(iconTmp.getIconWidth(), iconTmp.getIconHeight(), 4, forceToUseBufferedImage);
+      result = buildGenericImage(iconTmp.getIconWidth(), iconTmp.getIconHeight(), 4, forceToUseBufferedImage);
       iconTmp.paintIcon(null, result.createGraphics(), 0, 0);
 
       Dimension originalSize = BufferedImageUtils.getImageSize(imagePath);
@@ -226,7 +243,7 @@ public class GenericImageFactory {
         result = result.getSubimage((result.getWidth()-dimThumbnail.width)/2, (result.getHeight()-dimThumbnail.height)/2, dimThumbnail.width, dimThumbnail.height, true);
       }
     } else {
-      result = GenericImageFactory.readImage(imagePath, false, forceToUseBufferedImage);
+      result = readImage(imagePath, false, forceToUseBufferedImage);
     }
 
     result = result.scale(maxWidth, maxHeight);
@@ -235,12 +252,12 @@ public class GenericImageFactory {
   }
 
   //****************************************************
-  public static GenericImage buildTextImage(String richTextDocument, Dimension areaReferredSize, int alignment) {
+  public GenericImage buildTextImage(String richTextDocument, Dimension areaReferredSize, int alignment) {
     return buildTextImage(richTextDocument, areaReferredSize, alignment, (float) 1);
   }
 
   //****************************************************
-  public static GenericImage buildTextImage(String richTextDocument, Dimension areaReferredSize, int alignment, float scaleFactor) {
+  public GenericImage buildTextImage(String richTextDocument, Dimension areaReferredSize, int alignment, float scaleFactor) {
     GenericImage result = null;
 
     if(isFlgUseVirtualImages()){
@@ -260,7 +277,7 @@ public class GenericImageFactory {
 
 
   //*****************************************************/
-  public static GenericImage scaleImageFromFile(String pathImage, int maxW, int maxH){
+  public GenericImage scaleImageFromFile(String pathImage, int maxW, int maxH){
     GenericImage result = null;
 
     if(isFlgUseVirtualImages()){

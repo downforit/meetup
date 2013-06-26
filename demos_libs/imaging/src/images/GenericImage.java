@@ -147,7 +147,7 @@ public abstract class GenericImage {
         imgTmp = this;
       }
 
-      GenericImage imgMask = GenericImageFactory.buildGenericImage(this.getWidth(), this.getHeight(), 3);
+      GenericImage imgMask = GenericImageFactory.getInstance().buildGenericImage(this.getWidth(), this.getHeight(), 3);
       imgMask.fill(new Color(opacityLevel, opacityLevel, opacityLevel));
 
       imgTmp = imgTmp.applyTrasparencyMask(imgMask);
@@ -207,7 +207,7 @@ public abstract class GenericImage {
       if(this.getNumLivelli() < 4){
         return this.clone();
       }
-      GenericImage result = GenericImageFactory.buildGenericImage(this.getWidth(), this.getHeight(), 3);
+      GenericImage result = GenericImageFactory.getInstance().buildGenericImage(this.getWidth(), this.getHeight(), 3);
       result.fill(backgroundColor);
 
       result.DrawImage(this, 0, 0);
@@ -218,7 +218,7 @@ public abstract class GenericImage {
 
     //*************************************************/
     public GenericImage applyRGBOffset(float[] offset) {
-        GenericImage rgbImage = GenericImageFactory.buildGenericImage(this.getWidth(), this.getHeight(), 3); //new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_BGR);
+        GenericImage rgbImage = GenericImageFactory.getInstance().buildGenericImage(this.getWidth(), this.getHeight(), 3); //new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_BGR);
         Graphics2D grRgbImage = rgbImage.createGraphics();
         grRgbImage.setRenderingHint(RenderingHints.KEY_RENDERING, BufferedImageUtils.getRenderParamenter());
 

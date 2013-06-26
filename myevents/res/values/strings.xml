@@ -53,7 +53,7 @@
     <string name="groupNameArleadyUsed">ATTENTION: group NAME arleady used, try to change it</string>
     <string name="accountArleadyAdded">ATTENTION: Account arleady prensent in the group</string>
 
-    <string name="goToTheProgramForTheLogin">To create a nuew account open the App</string>
+    <string name="goToTheProgramForTheLogin">To create a new account open the App</string>
     
     <string name="synchronize">Synchronize</string>
     <string name="resetDb">Reset database</string>
@@ -64,7 +64,7 @@
     <string name="group">Group</string>
     <string name="date">Date</string>
     <string name="refreshLists">Refresh lists</string>
-    <string name="reloadLists">Relaod lists</string>
+    <string name="reloadLists">Reload lists</string>
     <string name="selectAGroup">Click to select a group</string>
     
 </resources>

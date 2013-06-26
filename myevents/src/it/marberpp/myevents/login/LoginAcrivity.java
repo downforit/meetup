@@ -41,7 +41,7 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 
 			authTokenType = getIntent().getStringExtra(MainLib.PARAM_AUTHTOKEN_TYPE);
 
-			if(username == null || username.length() == 0){
+			if(loginType != null && (username == null || username.length() == 0)){
 				this.newAccount = true;
 			}
 			
@@ -61,6 +61,13 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
 		            	LoginAcrivity.this.finish();
 		            }
 		        })
+		        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						LoginAcrivity.this.finish();
+						
+					}
+				})
 		        .show();
 		        
 			}
@@ -191,6 +198,7 @@ public class LoginAcrivity extends SherlockFragmentActivity implements LoginList
         if(createNewAccount){
             if(mAccountManager.addAccountExplicitly(account, password, null) == true){
 	            // Set contacts sync for this account.
+            	ContentResolver.addPeriodicSync(account, ContactsContract.AUTHORITY, new Bundle(), 10 * 60);
 	            ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
             } else {
                 mAccountManager.setPassword(account, password);

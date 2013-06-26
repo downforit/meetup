@@ -739,8 +739,8 @@ public class FileUtilities {
     }
 
     /*****************************************************/
-    public static File showJpgTifChooser(String currentPath, Component parentComponent) {
-        FileChooserFilter jpgff = new FileChooserFilter(new String[]{"jpg", "jpeg", "tif", "tiff"}, "Tutte le immagini jpg e tif");
+    public static File showJpgTifPngChooser(String currentPath, Component parentComponent) {
+        FileChooserFilter jpgff = new FileChooserFilter(new String[]{"jpg", "jpeg", "tif", "tiff", "png"}, "Tutte le immagini jpg, tif e png");
 
         return showFileChooser("Selezionare un file .jpg,.tif", jpgff, new File(currentPath), JFileChooser.FILES_ONLY, true);
     }
