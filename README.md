@@ -1,6 +1,6 @@
 # Challenge
 
-The goal of this application is to let user organize meetups (groups + users). 
+The goal of this application is to let users organize meetups (groups + users). 
 
 The client (Android) is implemented using:
 - fragments
